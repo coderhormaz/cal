@@ -86,10 +86,15 @@ const ZCalendar = {
 // Ensure days of week are always visible and not hidden by overflow or grid issues
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-interface HybridCalendarProps {
-  user: any;
+interface User {
+  id: string;
+  email: string;
+  // add more fields if needed
 }
 
+interface HybridCalendarProps {
+  user: User;
+}
 
 export default function HybridCalendar({ user }: HybridCalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -97,14 +102,12 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
   const month = currentDate.getMonth();
   const daysInMonth = getDaysInMonth(currentDate);
   const firstDayOfMonth = getDay(startOfMonth(currentDate));
-  const today = new Date();
   const shenshaiDays = ZCalendar.Shenshai.getRojNamesForMonth(new Date(year, month, 1));
 
   // Event state and modal
   const [events, setEvents] = useState<EventData[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalInitial, setModalInitial] = useState<Partial<EventData> | undefined>(undefined);
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   // Fetch events for this user and month
   useEffect(() => {
@@ -153,8 +156,7 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
     };
     // Remove id if undefined (for insert)
     if (typeof event.id === 'undefined') {
-      const { id, ...rest } = event;
-      event = rest;
+      event = Object.fromEntries(Object.entries(event).filter(([k]) => k !== 'id')) as typeof event;
     }
     console.log('Event payload to Supabase:', event);
     if (data.id) {
@@ -167,7 +169,70 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
     setModalOpen(false);
   };
 
-  // Top bar with logout button and view switcher placeholder
+  // State for all events modal
+  const [showAllEvents, setShowAllEvents] = useState(false);
+
+  // Handler to delete an event
+  async function handleDeleteEvent(id: string) {
+  const { error } = await supabase.from('events').delete().eq('id', id);
+  if (error) {
+    alert('Failed to delete event: ' + error.message);
+    return;
+  }
+  // Refetch events after delete
+  const { data, error: fetchError } = await supabase
+    .from('events')
+    .select('*')
+    .eq('user_id', user.id);
+  if (!fetchError && data) setEvents(data);
+  setShowAllEvents(false);
+  setModalOpen(false);
+  }
+
+  // Handler to edit an event (open modal with data)
+  function handleEditEvent(event: EventData) {
+    setModalInitial(event);
+    setModalOpen(true);
+    setShowAllEvents(false);
+  }
+
+  // Modal to show all events for the user
+  function AllEventsModal() {
+    return (
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.18)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ background: '#fff', borderRadius: 12, padding: 24, minWidth: 340, maxWidth: 500, boxShadow: '0 2px 16px #aaa', position: 'relative', maxHeight: '80vh', overflowY: 'auto' }}>
+          <h3 style={{ marginBottom: 12 }}>All My Events</h3>
+          <button onClick={() => setShowAllEvents(false)} style={{ position: 'absolute', top: 12, right: 16, background: 'none', border: 'none', fontSize: 22, color: '#888', cursor: 'pointer' }} title="Close">×</button>
+          {events.length === 0 ? (
+            <div style={{ color: '#888', textAlign: 'center', margin: '32px 0' }}>No events found.</div>
+          ) : (
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+              {events.map(ev => (
+                <li key={ev.id} style={{ borderBottom: '1px solid #eee', padding: '10px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 600 }}>{ev.title}</div>
+                    <div style={{ fontSize: 13, color: '#555' }}>{ev.description}</div>
+                    <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>
+                      {ev.calendar_type === 'gregorian'
+                        ? `Gregorian: ${typeof ev.gregorian_month === 'number' ? (ZCalendar.Shenshai.MAH[ev.gregorian_month] || ev.gregorian_month + 1) : ''} ${ev.gregorian_day}`
+                        : `Parsi: ${typeof ev.parsi_month === 'number' ? (ZCalendar.Shenshai.MAH[ev.parsi_month] || ev.parsi_month + 1) : ''} ${ev.parsi_roj}`}
+                      {ev.recurrence ? ` (${ev.recurrence})` : ''}
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: 6 }}>
+                    <button className="btn btn-sm btn-outline-primary" onClick={() => handleEditEvent(ev)} title="Edit">✏️</button>
+                    <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteEvent(ev.id!)} title="Delete">🗑️</button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // --- COMPONENT BODY STARTS HERE ---
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: 500, margin: '0 auto 12px auto', padding: '8px 0' }}>
@@ -176,6 +241,7 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
           <span style={{ fontSize: 13, color: '#555', marginBottom: 2 }}>Signed in as: <b>{user.email}</b></span>
           <div style={{ display: 'flex', gap: 8 }}>
             <button className="btn btn-success btn-sm" onClick={() => handleAddEvent()} title="Add Event">＋ Add Event</button>
+            <button className="btn btn-info btn-sm" onClick={() => setShowAllEvents(true)} title="View All Events">📋 View All Events</button>
             <button className="btn btn-outline-secondary btn-sm" onClick={async () => { await import('../../lib/supabase').then(({ supabase }) => supabase.auth.signOut()); location.reload(); }}>Logout</button>
           </div>
         </div>
@@ -388,6 +454,7 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
         </div>
       </div>
       <EventModal open={modalOpen} onClose={() => setModalOpen(false)} onSave={handleSaveEvent} initialData={modalInitial} />
+      {showAllEvents && <AllEventsModal />}
     </div>
   );
 }
