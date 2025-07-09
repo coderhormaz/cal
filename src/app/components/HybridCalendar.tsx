@@ -346,20 +346,9 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
       fontFamily: 'Google Sans, Roboto, Arial, sans-serif'
     }}>
       {/* Header */}
-      <header style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 100,
-        background: 'var(--surface)',
-        borderBottom: '1px solid var(--border-color)',
-        boxShadow: 'var(--shadow-light)'
-      }}>
+      <header className="calendar-header">
         <div className="container">
-          <div className="d-flex align-items-center justify-content-between" style={{ 
-            padding: isMobile ? '12px 0' : '16px 0',
-            gap: '16px',
-            flexWrap: 'wrap'
-          }}>
+          <div className="d-flex align-items-center justify-content-between calendar-header-content">
             {/* Left side - Logo and navigation */}
             <div className="d-flex align-items-center gap-3">
               {isMobile && (
@@ -512,7 +501,7 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
       <main className="container" style={{ padding: isMobile ? '16px 12px' : '24px 16px' }}>
         {/* Calendar Controls */}
         <div className="card mb-4">
-          <div className="card-body" style={{ padding: isMobile ? '16px' : '20px' }}>
+          <div className="card-body calendar-controls">
             <div className="d-flex align-items-center justify-content-between gap-3" style={{ flexWrap: 'wrap' }}>
               <div className="d-flex align-items-center gap-2">
                 <button
@@ -559,36 +548,19 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
         {/* Calendar Grid */}
         <div className="card">
           <div className="card-body" style={{ padding: isMobile ? '12px' : '20px' }}>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(7, 1fr)',
-              gap: isMobile ? '1px' : '2px',
-              marginBottom: '8px'
-            }}>
+            <div className="calendar-grid" style={{ marginBottom: '8px' }}>
               {/* Day headers */}
               {daysOfWeek.map(day => (
                 <div
                   key={day}
-                  style={{
-                    padding: isMobile ? '8px 4px' : '12px 8px',
-                    textAlign: 'center',
-                    fontSize: isMobile ? '12px' : '14px',
-                    fontWeight: '600',
-                    color: 'var(--text-secondary)',
-                    backgroundColor: 'var(--surface-variant)',
-                    borderRadius: 'var(--border-radius)'
-                  }}
+                  className="day-header"
                 >
                   {isMobile ? day.slice(0, 1) : day}
                 </div>
               ))}
             </div>
 
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(7, 1fr)',
-              gap: isMobile ? '1px' : '2px'
-            }}>
+            <div className="calendar-grid">
               {/* Empty cells for days before month starts */}
               {Array.from({ length: firstDayOfMonth }).map((_, i) => (
                 <div key={`empty-${i}`} style={{ 
@@ -649,30 +621,11 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                     onMouseLeave={e => {
                       if (!isCurrentDay) {
                         (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--surface)';
-                      }
-                    }}
-                  >
-                    <div style={{ 
-                      fontWeight: '600', 
-                      fontSize: isMobile ? '14px' : '16px',
-                      color: isCurrentDay ? 'var(--primary-blue)' : 'var(--text-primary)',
-                      marginBottom: '2px'
-                    }}>
+                    <div className="calendar-events-container">
                       {i + 1}
                     </div>
                     
-                    <div style={{
-                      fontSize: isMobile ? '9px' : '10px',
-                      color: 'var(--text-tertiary)',
-                      lineHeight: '1.2',
-                      marginBottom: '4px',
-                      wordBreak: 'break-word',
-                      height: isMobile ? '24px' : '28px',
-                      overflow: 'hidden',
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical'
-                    }}>
+                    <div className="calendar-parsi-date">
                       {shenshaiText}
                     </div>
 
@@ -714,13 +667,7 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                           {ev.title}
                         </div>
                       ))}
-                      
-                      {dayEvents.length > (isMobile ? 2 : 3) && (
-                        <div style={{
-                          fontSize: isMobile ? '9px' : '10px',
-                          color: 'var(--text-tertiary)',
-                          fontWeight: '500'
-                        }}>
+                        <div className="more-events-indicator">
                           +{dayEvents.length - (isMobile ? 2 : 3)} more
                         </div>
                       )}
