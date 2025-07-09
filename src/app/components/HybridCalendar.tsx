@@ -1,9 +1,59 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+// Utility: Generate a color from a string (event title)
+function stringToColor(str: string) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const h = hash % 360;
+  return `hsl(${h}, 70%, 72%)`;
+}
+
+// Popover component for event details
+function EventPopover({ event, position, onClose }: { event: EventData, position: { x: number, y: number }, onClose: () => void }) {
+  return (
+    <div style={{
+      position: 'fixed',
+      top: position.y,
+      left: position.x,
+      background: '#fff',
+      borderRadius: 10,
+      boxShadow: '0 4px 24px 0 rgba(60,64,67,0.18)',
+      padding: '14px 18px',
+      minWidth: 220,
+      zIndex: 3000,
+      border: '1px solid #e0e7ff',
+      fontFamily: 'Roboto, Arial, sans-serif',
+      color: '#222',
+      animation: 'fadeIn 0.18s',
+    }}>
+      <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}>{event.title}</div>
+      {event.description && <div style={{ fontSize: 13, color: '#555', marginBottom: 6 }}>{event.description}</div>}
+      <div style={{ fontSize: 12, color: '#666' }}>
+        {event.calendar_type === 'gregorian'
+          ? `Gregorian: ${(typeof event.gregorian_month === 'number' ? ZCalendar.Shenshai.MAH[event.gregorian_month] : '')} ${event.gregorian_day}`
+          : `Parsi: ${(typeof event.parsi_month === 'number' ? ZCalendar.Shenshai.MAH[event.parsi_month] : '')} ${event.parsi_roj}`}
+      </div>
+      <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>
+        {typeof event.recurrence !== 'undefined' && event.recurrence !== '' ? `Repeats: ${event.recurrence}` : 'One-time event'}
+      </div>
+      <button onClick={onClose} style={{ position: 'absolute', top: 6, right: 10, background: 'none', border: 'none', fontSize: 18, color: '#aaa', cursor: 'pointer' }} title="Close">×</button>
+    </div>
+  );
+}
 import { addMonths, subMonths, startOfMonth, getDaysInMonth, getDay, isToday } from 'date-fns';
 import { supabase } from '../../lib/supabase';
 import EventModal, { EventData } from './EventModal';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+// Add Roboto font import to the top of the file (for Next.js, use a <link> in the <head> via _app or layout, but for demo, inject here)
+if (typeof window !== 'undefined') {
+  const roboto = document.createElement('link');
+  roboto.href = 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap';
+  roboto.rel = 'stylesheet';
+  document.head.appendChild(roboto);
+}
 
 const ZCalendar = {
   Shenshai: {
@@ -232,141 +282,112 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
     );
   }
 
+  // Popover state
+  const [popover, setPopover] = useState<{ event: EventData, position: { x: number, y: number } } | null>(null);
+
   // --- COMPONENT BODY STARTS HERE ---
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: 500, margin: '0 auto 12px auto', padding: '8px 0' }}>
-        <div style={{ fontWeight: 600, fontSize: 18 }}>🗓️ My Calendar</div>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
-          <span style={{ fontSize: 13, color: '#555', marginBottom: 2 }}>Signed in as: <b>{user.email}</b></span>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button className="btn btn-success btn-sm" onClick={() => handleAddEvent()} title="Add Event">＋ Add Event</button>
-            <button className="btn btn-info btn-sm" onClick={() => setShowAllEvents(true)} title="View All Events">📋 View All Events</button>
-            <button className="btn btn-outline-secondary btn-sm" onClick={async () => { await import('../../lib/supabase').then(({ supabase }) => supabase.auth.signOut()); location.reload(); }}>Logout</button>
-          </div>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)', fontFamily: 'Roboto, Arial, sans-serif' }}>
+      {/* Premium sticky header */}
+      <div style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 10,
+        background: 'linear-gradient(90deg, #4285F4 0%, #1967d2 100%)',
+        color: '#fff',
+        padding: '18px 0 10px 0',
+        boxShadow: '0 2px 12px rgba(66,133,244,0.08)',
+        marginBottom: 18
+      }}>
+      <div style={{
+        maxWidth: 900,
+        margin: '0 auto',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 12,
+        flexWrap: 'wrap',
+        padding: '0 8px',
+      }}>
+        {/* Left: Calendar Controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+          <button
+            className="btn btn-light"
+            style={{ fontWeight: 500, borderRadius: 8, border: '1px solid #e3e8f0', background: '#fff', color: '#1967d2', boxShadow: '0 1px 4px #e3e8f0', padding: '4px 14px', fontSize: 15, transition: 'background 0.18s' }}
+            onClick={() => setCurrentDate(new Date())}
+            title="Go to Today"
+          >Today</button>
+          <select
+            value={month}
+            onChange={e => setCurrentDate(new Date(year, Number(e.target.value), 1))}
+            style={{ minWidth: 120, borderRadius: 6, border: '1px solid #e3e8f0', padding: '6px 12px', fontSize: 16, fontWeight: 500, background: '#fff', color: '#1967d2' }}
+            title="Jump to month"
+          >
+            {Array.from({ length: 12 }).map((_, idx) => (
+              <option key={idx} value={idx} style={{ fontSize: 16, fontWeight: 500 }}>{new Date(year, idx, 1).toLocaleString('default', { month: 'long' })}</option>
+            ))}
+          </select>
+          <input
+            type="number"
+            min="1900"
+            max="2100"
+            value={year}
+            onChange={e => setCurrentDate(new Date(Number(e.target.value), month, 1))}
+            style={{ width: 80, borderRadius: 6, border: '1px solid #e3e8f0', padding: '3px 8px', fontSize: 15 }}
+            title="Jump to year"
+          />
+        </div>
+        {/* Right: User Info and Actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 15, fontWeight: 400, opacity: 0.92 }}>Signed in as:</span>
+          <b style={{ fontWeight: 500, fontSize: 15, color: '#e65100', background: '#fff3e0', borderRadius: 6, padding: '2px 8px', whiteSpace: 'nowrap', overflow: 'visible', textOverflow: 'clip', maxWidth: 260 }}>{user.email}</b>
+          <button
+            className="btn btn-primary"
+            style={{ fontWeight: 500, borderRadius: 8, background: '#4285F4', color: '#fff', boxShadow: '0 1px 4px #e3e8f0', padding: '4px 14px', fontSize: 15, border: 'none' }}
+            onClick={() => handleAddEvent()}
+          >Add Event</button>
+          <button
+            className="btn btn-outline-secondary"
+            style={{ fontWeight: 500, borderRadius: 8, border: '1px solid #e3e8f0', background: '#f7fafd', color: '#1967d2', boxShadow: '0 1px 4px #e3e8f0', padding: '4px 14px', fontSize: 15 }}
+            onClick={() => setShowAllEvents(true)}
+          >Manage Events</button>
+          <button
+            className="btn btn-outline-danger"
+            style={{ fontWeight: 500, borderRadius: 8, border: '1px solid #e57373', background: '#fff', color: '#e53935', boxShadow: '0 1px 4px #e3e8f0', padding: '4px 14px', fontSize: 15 }}
+            onClick={async () => { await supabase.auth.signOut(); window.location.reload(); }}
+          >Logout</button>
         </div>
       </div>
-      <div
-        className="calendar-responsive-container"
-        style={{
-          padding: 0,
-          backgroundColor: 'transparent',
-          fontFamily: 'Arial, sans-serif',
-          width: '100%',
-          maxWidth: 500,
-          margin: '0 auto',
-        }}
-      >
-        <style>{`
-          .calendar-responsive-container {
-            width: 100vw;
-            max-width: 500px;
-            min-height: 100vh;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-          }
-          .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            padding: 0 8px;
-          }
-          .calendar-header h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin: 0;
-          }
-          .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
-            background-color: #e5e7eb;
-            border-radius: 12px;
-            overflow: hidden;
-            flex: 1 1 auto;
-          }
-          .calendar-day {
-            background-color: #fff;
-            border: 1px solid #e5e7eb;
-            padding: 12px 4px 8px 4px;
-            min-height: 64px;
-            cursor: pointer;
-            font-size: 1rem;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: flex-start;
-            transition: background 0.2s;
-          }
-          .calendar-day.header {
-            background-color: #f3f4f6;
-            font-weight: bold;
-            text-align: center;
-            cursor: default;
-            min-height: 36px;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.98rem;
-          }
-          .calendar-day.today {
-            background-color: #d1e7dd;
-            border-color: #b6dfc5;
-          }
-          .calendar-day:hover:not(.header) {
-            background-color: #f0fdfa;
-          }
-          .gregorian-date {
-            font-weight: bold;
-            font-size: 1.1em;
-            margin-bottom: 2px;
-          }
-          .parsi-date {
-            font-size: 0.85em;
-            color: #555;
-          }
-          @media (max-width: 700px) {
-            .calendar-responsive-container {
-              max-width: 100vw;
-              min-height: 100vh;
-              padding: 0;
-            }
-            .calendar-header h2 {
-              font-size: 1.1rem;
-            }
-            .calendar-day, .calendar-day.header {
-              padding: 7px 1px 5px 1px;
-              min-height: 32px;
-              font-size: 0.85rem;
-            }
-            .calendar-grid {
-              border-radius: 6px;
-            }
-          }
-          @media (max-width: 480px) {
-            .calendar-responsive-container {
-              min-height: 100vh;
-              width: 100vw;
-              max-width: 100vw;
-            }
-            .calendar-header h2 {
-              font-size: 0.98rem;
-            }
-            .calendar-day, .calendar-day.header {
-              padding: 4px 0 2px 0;
-              min-height: 24px;
-              font-size: 0.75rem;
-            }
-          }
-        `}</style>
-        <div className="calendar-header mb-3">
-          <button className="btn btn-primary" style={{ minWidth: 80 }} onClick={() => setCurrentDate(subMonths(currentDate, 1))}>← Prev</button>
-          <h2>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
-          <button className="btn btn-primary" style={{ minWidth: 80 }} onClick={() => setCurrentDate(addMonths(currentDate, 1))}>Next →</button>
+      </div>
+      {/* Main calendar card */}
+      <div style={{
+        background: '#fff',
+        borderRadius: 22,
+        boxShadow: '0 8px 40px 0 rgba(60,64,67,0.13)',
+        maxWidth: 700,
+        margin: '32px auto',
+        padding: 32,
+        position: 'relative',
+        minHeight: 560,
+        border: '1.5px solid #e3e8f0',
+        transition: 'box-shadow 0.22s',
+      }}>
+        <div className="calendar-header mb-3" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
+          <button className="btn btn-primary" style={{ minWidth: 80, borderRadius: 8, fontWeight: 500, background: '#4285F4', border: 'none', boxShadow: '0 1px 4px #e3e8f0' }} onClick={() => setCurrentDate(subMonths(currentDate, 1))}>← Prev</button>
+          <h2 style={{ fontSize: 24, fontWeight: 700, color: '#1967d2', margin: 0, letterSpacing: 0.2 }}>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
+          <button className="btn btn-primary" style={{ minWidth: 80, borderRadius: 8, fontWeight: 500, background: '#4285F4', border: 'none', boxShadow: '0 1px 4px #e3e8f0' }} onClick={() => setCurrentDate(addMonths(currentDate, 1))}>Next →</button>
         </div>
-        <div className="calendar-grid" style={{ minWidth: 0 }}>
+        <div className="calendar-grid" style={{
+          minWidth: 0,
+          marginBottom: 12,
+          display: 'grid',
+          gridTemplateColumns: 'repeat(7, 1fr)',
+          gap: 6,
+          background: '#f7fafd',
+          borderRadius: 14,
+          boxShadow: '0 1px 8px #e3e8f0',
+          padding: 10,
+        }}>
           {daysOfWeek.map(day => (
             <div
               key={day}
@@ -376,18 +397,21 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                 overflow: 'visible',
                 wordBreak: 'break-word',
                 whiteSpace: 'normal',
-                fontSize: '0.95rem',
-                paddingLeft: 2,
-                paddingRight: 2,
+                fontSize: '1.05rem',
+                padding: '6px 0',
                 textAlign: 'center',
-                lineHeight: 1.1
+                lineHeight: 1.1,
+                fontWeight: 600,
+                color: '#1967d2',
+                background: 'transparent',
+                borderRadius: 8,
               }}
             >
               {day}
             </div>
           ))}
           {Array.from({ length: firstDayOfMonth }).map((_, i) => (
-            <div key={`empty-${i}`} className="calendar-day" style={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', minHeight: 24, minWidth: 0 }}></div>
+            <div key={`empty-${i}`} className="calendar-day" style={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', minHeight: 32, minWidth: 0, borderRadius: 8 }}></div>
           ))}
           {Array.from({ length: daysInMonth }).map((_, i) => {
             const dateObj = new Date(year, month, i + 1);
@@ -431,30 +455,96 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                   overflow: 'visible',
                   wordBreak: 'break-word',
                   whiteSpace: 'normal',
-                  fontSize: '0.95rem',
-                  paddingLeft: 2,
-                  paddingRight: 2,
+                  fontSize: '1.01rem',
+                  padding: '7px 4px 7px 6px',
                   textAlign: 'left',
-                  lineHeight: 1.15
+                  lineHeight: 1.15,
+                  borderRadius: 10,
+                  background: isCurrentDay ? 'linear-gradient(90deg, #e3f0ff 60%, #f7fafd 100%)' : '#fff',
+                  border: isCurrentDay ? '2px solid #4285F4' : '1px solid #e5e7eb',
+                  boxShadow: isCurrentDay ? '0 2px 8px #e3e8f0' : 'none',
+                  transition: 'box-shadow 0.18s, border 0.18s, background 0.18s',
+                  cursor: 'pointer',
                 }}
                 onClick={() => handleAddEvent(dateObj.toISOString().slice(0, 10))}
+                onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 2px 12px #e3e8f0')}
+                onMouseLeave={e => (e.currentTarget.style.boxShadow = isCurrentDay ? '0 2px 8px #e3e8f0' : 'none')}
               >
-                <div className="gregorian-date">{i + 1}</div>
-                <div className="parsi-date" style={{wordBreak: 'break-word', whiteSpace: 'normal', fontSize: '0.72em', color: '#666'}}>{shenshaiText}</div>
+                <div className="gregorian-date" style={{ fontWeight: 600, color: isCurrentDay ? '#1967d2' : '#222', fontSize: '1.08em' }}>{i + 1}</div>
+                <div className="parsi-date" style={{wordBreak: 'break-word', whiteSpace: 'normal', fontSize: '0.75em', color: '#666', marginBottom: 2}}>{shenshaiText}</div>
                 {dayEvents.map(ev => (
-                  <div key={ev.id} style={{ background: '#e0e7ff', color: '#3730a3', borderRadius: 6, padding: '2px 6px', margin: '2px 0', fontSize: '0.8em', cursor: 'pointer' }}
-                    onClick={e => { e.stopPropagation(); setModalInitial(ev); setModalOpen(true); }}
+                  <div
+                    key={ev.id}
+                    style={{
+                      background: '#fff',
+                      color: '#222',
+                      borderRadius: 7,
+                      padding: '3px 10px 3px 8px',
+                      margin: '3px 0',
+                      fontSize: '0.85em',
+                      cursor: 'pointer',
+                      borderLeft: `6px solid ${stringToColor(ev.title)}`,
+                      boxShadow: '0 2px 8px 0 rgba(66,133,244,0.10)',
+                      transition: 'box-shadow 0.18s, background 0.18s, transform 0.18s',
+                      fontWeight: 500,
+                    }}
+                    onClick={e => {
+                      e.stopPropagation();
+                      setModalInitial(ev);
+                      setModalOpen(true);
+                    }}
+                    onMouseEnter={e => {
+                      const rect = (e.target as HTMLElement).getBoundingClientRect();
+                      (e.target as HTMLElement).style.transform = 'scale(1.04)';
+                      setPopover({ event: ev, position: { x: rect.right + 8, y: rect.top - 8 } });
+                    }}
+                    onMouseLeave={e => {
+                      (e.target as HTMLElement).style.transform = 'scale(1)';
+                      setPopover(null);
+                    }}
                   >
-                    {ev.title}
+                    <span style={{ fontWeight: 600 }}>{ev.title}</span>
                   </div>
                 ))}
               </div>
             );
           })}
         </div>
+        {/* Floating Action Button for Add Event */}
+        <button
+          className="btn btn-primary"
+          style={{
+            position: 'fixed',
+            right: 32,
+            bottom: 32,
+            width: 64,
+            height: 64,
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, #4285F4 60%, #1967d2 100%)',
+            color: '#fff',
+            fontSize: 36,
+            boxShadow: '0 8px 32px 0 rgba(66,133,244,0.22)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 3002,
+            border: 'none',
+            cursor: 'pointer',
+            transition: 'box-shadow 0.22s, transform 0.18s',
+          }}
+          onClick={() => handleAddEvent()}
+          title="Add Event"
+          onMouseDown={e => (e.currentTarget.style.transform = 'scale(0.93)')}
+          onMouseUp={e => (e.currentTarget.style.transform = 'scale(1)')}
+          onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+        >
+          ＋
+        </button>
+        {/* All Events Modal and Event Modal */}
+        <EventModal open={modalOpen} onClose={() => setModalOpen(false)} onSave={handleSaveEvent} initialData={modalInitial} />
+        {showAllEvents && <AllEventsModal />}
+        {popover && <EventPopover event={popover.event} position={popover.position} onClose={() => setPopover(null)} />}
       </div>
-      <EventModal open={modalOpen} onClose={() => setModalOpen(false)} onSave={handleSaveEvent} initialData={modalInitial} />
-      {showAllEvents && <AllEventsModal />}
     </div>
   );
 }

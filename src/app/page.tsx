@@ -21,14 +21,17 @@ function mapSupabaseUser(supabaseUser: { id: string; email?: string } | null): U
 }
 
 export default function Home() {
-  // Replace 'any' with 'User | null'
   const [user, setUser] = useState<User | null>(null);
-  const [loading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(mapSupabaseUser(data?.user)));
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(mapSupabaseUser(data?.user));
+      setLoading(false);
+    });
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(mapSupabaseUser(session?.user ?? null));
+      setLoading(false);
     });
     return () => {
       listener?.subscription.unsubscribe();
@@ -36,7 +39,7 @@ export default function Home() {
   }, []);
 
   if (loading) return <div style={{textAlign:'center',marginTop:80}}>Loading...</div>;
-  if (!user) return <Auth onAuth={() => supabase.auth.getUser().then(({ data }) => setUser(mapSupabaseUser(data?.user)))} />;
+  if (!user) return <Auth onAuth={() => supabase.auth.getUser().then(({ data }) => { setUser(mapSupabaseUser(data?.user)); setLoading(false); })} />;
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f8f9fa] p-4">
       <HybridCalendar user={user} />
