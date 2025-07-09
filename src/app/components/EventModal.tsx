@@ -54,7 +54,6 @@ export default function EventModal({
     id: initialData?.id
   });
 
-  // Handle frequency change
   const handleRecurrenceChange = (val: string) => {
     setForm(f => ({ ...f, recurrence: val as EventData['recurrence'] }));
   };
@@ -62,65 +61,228 @@ export default function EventModal({
   if (!open) return null;
 
   return (
-    <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.18)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ background: '#fff', borderRadius: 12, padding: 24, minWidth: 320, maxWidth: 400, boxShadow: '0 2px 16px #aaa', position: 'relative' }}>
-        <h3 style={{ marginBottom: 12 }}>{form.id ? 'Edit Event' : 'Add Event'}</h3>
-        <form onSubmit={e => { e.preventDefault(); onSave(form); }}>
-          <input type="text" placeholder="Title" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} required style={{ width: '100%', marginBottom: 8, padding: 6, borderRadius: 6, border: '1px solid #ccc' }} />
-          <textarea placeholder="Description" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} style={{ width: '100%', marginBottom: 8, padding: 6, borderRadius: 6, border: '1px solid #ccc' }} />
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={e => e.stopPropagation()}>
+        <div className="card-header d-flex align-items-center justify-content-between">
+          <h2 style={{ 
+            fontSize: '20px', 
+            fontWeight: '600', 
+            color: 'var(--text-primary)',
+            margin: 0
+          }}>
+            {form.id ? 'Edit Event' : 'New Event'}
+          </h2>
+          <button 
+            onClick={onClose}
+            className="btn btn-text"
+            style={{ 
+              padding: '8px',
+              minHeight: 'auto',
+              fontSize: '20px',
+              color: 'var(--text-tertiary)'
+            }}
+            title="Close"
+          >
+            ×
+          </button>
+        </div>
 
-          <div style={{ marginBottom: 8 }}>
-            <label style={{ fontWeight: 500 }}>Select Frequency:&nbsp;</label>
-            <select value={form.recurrence} onChange={e => handleRecurrenceChange(e.target.value)} style={{ padding: 6, borderRadius: 6, border: '1px solid #ccc' }}>
-              <option value="">No Recurrence</option>
-              <option value="monthly">Monthly</option>
-              <option value="yearly">Yearly</option>
-            </select>
-          </div>
-
-          <div style={{ marginBottom: 8 }}>
-            <label style={{ fontWeight: 500 }}>Choose Calendar:&nbsp;</label>
-            <select value={form.calendar_type} onChange={e => setForm(f => ({ ...f, calendar_type: e.target.value as 'gregorian' | 'parsi' }))} style={{ padding: 6, borderRadius: 6, border: '1px solid #ccc' }}>
-              <option value="gregorian">English</option>
-              <option value="parsi">Parsi</option>
-            </select>
-          </div>
-
-          {form.calendar_type === 'gregorian' && (
-            <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
-              {form.recurrence !== 'monthly' && (
-                <select value={form.gregorian_month} onChange={e => setForm(f => ({ ...f, gregorian_month: Number(e.target.value) }))} style={{ padding: 6, borderRadius: 6, border: '1px solid #ccc' }}>
-                  {gregorianMonths.map((m, i) => <option key={i} value={i}>{m}</option>)}
-                </select>
-              )}
-              <select value={form.gregorian_day} onChange={e => setForm(f => ({ ...f, gregorian_day: Number(e.target.value) }))} style={{ padding: 6, borderRadius: 6, border: '1px solid #ccc' }}>
-                {gregorianDays.map(d => <option key={d} value={d}>{d}</option>)}
-              </select>
+        <div className="card-body">
+          <form onSubmit={e => { e.preventDefault(); onSave(form); }}>
+            <div className="mb-3">
+              <label style={{ 
+                display: 'block', 
+                fontSize: '14px', 
+                fontWeight: '500', 
+                color: 'var(--text-primary)',
+                marginBottom: '6px'
+              }}>
+                Event Title *
+              </label>
+              <input 
+                type="text" 
+                placeholder="Add title" 
+                value={form.title} 
+                onChange={e => setForm(f => ({ ...f, title: e.target.value }))} 
+                required 
+                className="form-control"
+              />
             </div>
-          )}
 
-          {form.calendar_type === 'parsi' && (
-            <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
-              {form.recurrence !== 'monthly' && (
-                <select value={form.parsi_month} onChange={e => setForm(f => ({ ...f, parsi_month: Number(e.target.value) }))} style={{ padding: 6, borderRadius: 6, border: '1px solid #ccc' }}>
-                  {parsiMonths.map((m, i) => <option key={i} value={i}>{m}</option>)}
-                </select>
-              )}
-              <select value={form.parsi_roj} onChange={e => setForm(f => ({ ...f, parsi_roj: Number(e.target.value) }))} style={{ padding: 6, borderRadius: 6, border: '1px solid #ccc' }}>
-                {parsiRoj.map((r, idx) => <option key={idx + 1} value={idx + 1}>{r}</option>)}
-              </select>
+            <div className="mb-3">
+              <label style={{ 
+                display: 'block', 
+                fontSize: '14px', 
+                fontWeight: '500', 
+                color: 'var(--text-primary)',
+                marginBottom: '6px'
+              }}>
+                Description
+              </label>
+              <textarea 
+                placeholder="Add description" 
+                value={form.description} 
+                onChange={e => setForm(f => ({ ...f, description: e.target.value }))} 
+                className="form-control"
+                rows={3}
+                style={{ resize: 'vertical', minHeight: '80px' }}
+              />
             </div>
-          )}
 
-          <div style={{ marginBottom: 12 }}>
-            <label><input type="checkbox" checked={form.reminder} onChange={e => setForm(f => ({ ...f, reminder: e.target.checked }))} /> Reminder</label>
-          </div>
+            <div className="d-flex gap-3 mb-3" style={{ flexWrap: 'wrap' }}>
+              <div style={{ flex: '1', minWidth: '200px' }}>
+                <label style={{ 
+                  display: 'block', 
+                  fontSize: '14px', 
+                  fontWeight: '500', 
+                  color: 'var(--text-primary)',
+                  marginBottom: '6px'
+                }}>
+                  Calendar Type
+                </label>
+                <select 
+                  value={form.calendar_type} 
+                  onChange={e => setForm(f => ({ ...f, calendar_type: e.target.value as 'gregorian' | 'parsi' }))} 
+                  className="form-control"
+                >
+                  <option value="gregorian">Gregorian</option>
+                  <option value="parsi">Parsi</option>
+                </select>
+              </div>
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
-            <button type="button" onClick={onClose} style={{ padding: '8px 16px', borderRadius: 6, border: 'none', background: '#eee' }}>Cancel</button>
-            <button type="submit" style={{ padding: '8px 16px', borderRadius: 6, border: 'none', background: '#2563eb', color: '#fff', fontWeight: 600 }}>{form.id ? 'Update' : 'Save'}</button>
-          </div>
-        </form>
+              <div style={{ flex: '1', minWidth: '200px' }}>
+                <label style={{ 
+                  display: 'block', 
+                  fontSize: '14px', 
+                  fontWeight: '500', 
+                  color: 'var(--text-primary)',
+                  marginBottom: '6px'
+                }}>
+                  Recurrence
+                </label>
+                <select 
+                  value={form.recurrence} 
+                  onChange={e => handleRecurrenceChange(e.target.value)} 
+                  className="form-control"
+                >
+                  <option value="">Does not repeat</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="yearly">Yearly</option>
+                </select>
+              </div>
+            </div>
+
+            {form.calendar_type === 'gregorian' && (
+              <div className="mb-3">
+                <label style={{ 
+                  display: 'block', 
+                  fontSize: '14px', 
+                  fontWeight: '500', 
+                  color: 'var(--text-primary)',
+                  marginBottom: '6px'
+                }}>
+                  Date
+                </label>
+                <div className="d-flex gap-2">
+                  {form.recurrence !== 'monthly' && (
+                    <select 
+                      value={form.gregorian_month} 
+                      onChange={e => setForm(f => ({ ...f, gregorian_month: Number(e.target.value) }))} 
+                      className="form-control"
+                      style={{ flex: '2' }}
+                    >
+                      {gregorianMonths.map((m, i) => <option key={i} value={i}>{m}</option>)}
+                    </select>
+                  )}
+                  <select 
+                    value={form.gregorian_day} 
+                    onChange={e => setForm(f => ({ ...f, gregorian_day: Number(e.target.value) }))} 
+                    className="form-control"
+                    style={{ flex: '1' }}
+                  >
+                    {gregorianDays.map(d => <option key={d} value={d}>{d}</option>)}
+                  </select>
+                </div>
+              </div>
+            )}
+
+            {form.calendar_type === 'parsi' && (
+              <div className="mb-3">
+                <label style={{ 
+                  display: 'block', 
+                  fontSize: '14px', 
+                  fontWeight: '500', 
+                  color: 'var(--text-primary)',
+                  marginBottom: '6px'
+                }}>
+                  Date
+                </label>
+                <div className="d-flex gap-2">
+                  {form.recurrence !== 'monthly' && (
+                    <select 
+                      value={form.parsi_month} 
+                      onChange={e => setForm(f => ({ ...f, parsi_month: Number(e.target.value) }))} 
+                      className="form-control"
+                      style={{ flex: '2' }}
+                    >
+                      {parsiMonths.map((m, i) => <option key={i} value={i}>{m}</option>)}
+                    </select>
+                  )}
+                  <select 
+                    value={form.parsi_roj} 
+                    onChange={e => setForm(f => ({ ...f, parsi_roj: Number(e.target.value) }))} 
+                    className="form-control"
+                    style={{ flex: '1' }}
+                  >
+                    {parsiRoj.map((r, idx) => <option key={idx + 1} value={idx + 1}>{r}</option>)}
+                  </select>
+                </div>
+              </div>
+            )}
+
+            <div className="mb-4">
+              <label style={{ 
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontSize: '14px', 
+                fontWeight: '500', 
+                color: 'var(--text-primary)',
+                cursor: 'pointer'
+              }}>
+                <input 
+                  type="checkbox" 
+                  checked={form.reminder} 
+                  onChange={e => setForm(f => ({ ...f, reminder: e.target.checked }))}
+                  style={{ 
+                    width: '16px', 
+                    height: '16px',
+                    accentColor: 'var(--primary-blue)'
+                  }}
+                />
+                Enable reminder
+              </label>
+            </div>
+
+            <div className="d-flex justify-content-between gap-3" style={{ flexWrap: 'wrap' }}>
+              <button 
+                type="button" 
+                onClick={onClose} 
+                className="btn btn-secondary"
+                style={{ flex: '1', minWidth: '120px' }}
+              >
+                Cancel
+              </button>
+              <button 
+                type="submit" 
+                className="btn btn-primary"
+                style={{ flex: '1', minWidth: '120px' }}
+              >
+                {form.id ? 'Update Event' : 'Create Event'}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

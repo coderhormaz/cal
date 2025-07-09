@@ -5,13 +5,11 @@ import Auth from "./components/Auth";
 import { supabase } from '../lib/supabase';
 import { useEffect, useState } from 'react';
 
-// Replace 'any' with a proper user type
 interface User {
   id: string;
   email: string;
 }
 
-// Helper to map Supabase user to local User type
 function mapSupabaseUser(supabaseUser: { id: string; email?: string } | null): User | null {
   if (!supabaseUser) return null;
   return {
@@ -38,11 +36,26 @@ export default function Home() {
     };
   }, []);
 
-  if (loading) return <div style={{textAlign:'center',marginTop:80}}>Loading...</div>;
-  if (!user) return <Auth onAuth={() => supabase.auth.getUser().then(({ data }) => { setUser(mapSupabaseUser(data?.user)); setLoading(false); })} />;
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f8f9fa] p-4">
-      <HybridCalendar user={user} />
-    </div>
-  );
+  if (loading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'var(--surface-variant)'
+      }}>
+        <div className="d-flex align-items-center gap-3">
+          <div className="loading-spinner"></div>
+          <span style={{ color: 'var(--text-secondary)', fontSize: '16px' }}>Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Auth onAuth={() => supabase.auth.getUser().then(({ data }) => { setUser(mapSupabaseUser(data?.user)); setLoading(false); })} />;
+  }
+
+  return <HybridCalendar user={user} />;
 }
