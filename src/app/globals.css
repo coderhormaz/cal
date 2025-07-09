@@ -375,3 +375,112 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-tertiary);
 }
+
+/* Calendar Day Cell Styles */
+.calendar-day-cell {
+  cursor: pointer;
+  transition: var(--transition), transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+}
+
+.calendar-day-cell:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+@media (max-width: 767px) {
+  .calendar-day-cell {
+    min-height: 60px;
+    padding: 6px 4px;
+  }
+}
+
+@media (min-width: 768px) {
+  .calendar-day-cell {
+    min-height: 80px;
+    padding: 8px 6px;
+  }
+}
+
+/* Calendar Day Event Title */
+.calendar-day-event-title {
+  background-color: inherit;
+  color: white;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  .calendar-day-event-title {
+    padding: 2px 4px;
+    font-size: 9px;
+  }
+}
+
+@media (min-width: 768px) {
+  .calendar-day-event-title {
+    padding: 3px 6px;
+    font-size: 11px;
+  }
+}
+
+/* Event Popover Styles */
+.event-popover {
+  position: fixed;
+  background: var(--surface);
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--shadow-heavy);
+  padding: 16px 20px;
+  min-width: 240px;
+  max-width: 320px;
+  z-index: 3000;
+  border: 1px solid var(--border-color);
+  font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
+  color: var(--text-primary);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.event-popover-title {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.event-popover-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.event-popover-details {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin-bottom: 4px;
+}
+
+.event-popover-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: var(--transition);
+}
+
+.event-popover-close-btn:hover {
+  background-color: var(--surface-variant);
+}

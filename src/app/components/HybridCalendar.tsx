@@ -17,56 +17,33 @@ function stringToColor(str: string) {
 // Popover component for event details
 function EventPopover({ event, position, onClose }: { event: EventData, position: { x: number, y: number }, onClose: () => void }) {
   return (
-    <div style={{
-      position: 'fixed',
-      top: position.y,
-      left: position.x,
-      background: 'var(--surface)',
-      borderRadius: 'var(--border-radius-large)',
-      boxShadow: 'var(--shadow-heavy)',
-      padding: '16px 20px',
-      minWidth: '240px',
-      maxWidth: '320px',
-      zIndex: 3000,
-      border: '1px solid var(--border-color)',
-      fontFamily: 'Google Sans, Roboto, Arial, sans-serif',
-      color: 'var(--text-primary)',
-      animation: 'fadeIn 0.2s ease-out',
-    }}>
-      <div style={{ fontWeight: '600', fontSize: '16px', marginBottom: '8px', color: 'var(--text-primary)' }}>
+    <div 
+      className="event-popover"
+      style={{
+        top: position.y,
+        left: position.x,
+      }}
+    >
+      <div className="event-popover-title">
         {event.title}
       </div>
       {event.description && (
-        <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: '1.4' }}>
+        <div className="event-popover-description">
           {event.description}
         </div>
       )}
-      <div style={{ fontSize: '13px', color: 'var(--text-tertiary)', marginBottom: '4px' }}>
+      <div className="event-popover-details">
         {event.calendar_type === 'gregorian'
           ? `Gregorian: ${(typeof event.gregorian_month === 'number' ? ZCalendar.Shenshai.MAH[event.gregorian_month] : '')} ${event.gregorian_day}`
           : `Parsi: ${(typeof event.parsi_month === 'number' ? ZCalendar.Shenshai.MAH[event.parsi_month] : '')} ${event.parsi_roj}`}
       </div>
-      <div style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>
+      <div className="event-popover-details">
         {typeof event.recurrence !== 'undefined' && event.recurrence !== '' ? `Repeats: ${event.recurrence}` : 'One-time event'}
       </div>
       <button 
         onClick={onClose} 
-        style={{ 
-          position: 'absolute', 
-          top: '8px', 
-          right: '12px', 
-          background: 'none', 
-          border: 'none', 
-          fontSize: '20px', 
-          color: 'var(--text-tertiary)', 
-          cursor: 'pointer',
-          padding: '4px',
-          borderRadius: '4px',
-          transition: 'var(--transition)'
-        }} 
+        className="event-popover-close-btn"
         title="Close"
-        onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--surface-variant)')}
-        onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
       >
         ×
       </button>
@@ -658,16 +635,10 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                 return (
                   <div
                     key={i}
+                    className="calendar-day-cell"
                     style={{
-                      minHeight: isMobile ? '60px' : '80px',
-                      padding: isMobile ? '6px 4px' : '8px 6px',
                       backgroundColor: isCurrentDay ? 'var(--secondary-blue)' : 'var(--surface)',
                       border: isCurrentDay ? '2px solid var(--primary-blue)' : '1px solid var(--border-color)',
-                      borderRadius: 'var(--border-radius)',
-                      cursor: 'pointer',
-                      transition: 'var(--transition)',
-                      position: 'relative',
-                      overflow: 'hidden'
                     }}
                     onClick={() => handleAddEvent(dateObj.toISOString().slice(0, 10))}
                     onMouseEnter={e => {
@@ -707,18 +678,9 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                       {dayEvents.slice(0, isMobile ? 2 : 3).map(ev => (
                         <div
                           key={ev.id}
+                          className="calendar-day-event-title"
                           style={{
                             backgroundColor: stringToColor(ev.title),
-                            color: 'white',
-                            borderRadius: '4px',
-                            padding: isMobile ? '2px 4px' : '3px 6px',
-                            fontSize: isMobile ? '10px' : '11px',
-                            fontWeight: '500',
-                            cursor: 'pointer',
-                            transition: 'var(--transition)',
-                            textOverflow: 'ellipsis',
-                            overflow: 'hidden',
-                            whiteSpace: 'nowrap'
                           }}
                           onClick={e => {
                             e.stopPropagation();
