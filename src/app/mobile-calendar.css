@@ -1,0 +1,298 @@
+/* Mobile Calendar Styles */
+.mobile-calendar {
+  min-height: 100vh;
+  background-color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #000000;
+}
+
+/* Header */
+.mobile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.menu-btn, .search-btn {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #000000;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.menu-btn:hover, .search-btn:hover {
+  background-color: #f5f5f5;
+}
+
+.date-badge {
+  width: 32px;
+  height: 32px;
+  background-color: #000000;
+  color: #ffffff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Month Header */
+.month-header {
+  padding: 20px 16px 16px;
+  background-color: #ffffff;
+}
+
+.month-header h1 {
+  font-size: 28px;
+  font-weight: 400;
+  margin: 0;
+  color: #000000;
+  letter-spacing: 0.5px;
+}
+
+/* Calendar Container */
+.calendar-container {
+  padding: 0 16px;
+  background-color: #ffffff;
+}
+
+/* Day Headers */
+.day-headers {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0;
+  margin-bottom: 8px;
+}
+
+.day-header {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666666;
+  padding: 8px 0;
+}
+
+.day-header.sunday {
+  color: #ff4444;
+}
+
+/* Calendar Grid */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Calendar Day */
+.calendar-day {
+  background-color: #ffffff;
+  min-height: 80px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  position: relative;
+}
+
+.calendar-day:hover {
+  background-color: #f8f8f8;
+}
+
+.calendar-day.empty {
+  background-color: #fafafa;
+  cursor: default;
+}
+
+.calendar-day.empty:hover {
+  background-color: #fafafa;
+}
+
+.calendar-day.today {
+  background-color: #e3f2fd;
+}
+
+.calendar-day.sunday .day-number {
+  color: #ff4444;
+}
+
+/* Day Content */
+.day-content {
+  padding: 8px 6px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.day-number {
+  font-size: 16px;
+  font-weight: 500;
+  color: #000000;
+  margin-bottom: 2px;
+  line-height: 1;
+}
+
+.calendar-day.today .day-number {
+  color: #1976d2;
+  font-weight: 600;
+}
+
+/* Parsi Date */
+.parsi-date {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-bottom: 4px;
+}
+
+.parsi-day {
+  font-size: 9px;
+  color: #666666;
+  line-height: 1.1;
+  margin-bottom: 1px;
+  font-weight: 500;
+}
+
+.parsi-month {
+  font-size: 8px;
+  color: #888888;
+  line-height: 1.1;
+  font-weight: 400;
+}
+
+/* Events */
+.events-container {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-top: auto;
+}
+
+.event-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.more-events {
+  font-size: 8px;
+  color: #666666;
+  margin-left: 2px;
+}
+
+/* Special Indicator */
+.special-indicator {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  color: #cccccc;
+}
+
+.calendar-day.first-day .special-indicator {
+  color: #666666;
+}
+
+/* Add Event Section */
+.add-event-section {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #ffffff;
+  border-top: 1px solid #e0e0e0;
+  padding: 16px;
+}
+
+.add-event-btn {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 16px;
+  font-size: 16px;
+  color: #666666;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: background-color 0.2s;
+}
+
+.add-event-btn:hover {
+  background-color: #f5f5f5;
+}
+
+.add-event-btn svg {
+  color: #000000;
+}
+
+/* Responsive adjustments */
+@media (max-width: 375px) {
+  .calendar-day {
+    min-height: 70px;
+  }
+  
+  .day-content {
+    padding: 6px 4px;
+  }
+  
+  .day-number {
+    font-size: 14px;
+  }
+  
+  .parsi-day {
+    font-size: 8px;
+  }
+  
+  .parsi-month {
+    font-size: 7px;
+  }
+}
+
+@media (min-width: 414px) {
+  .calendar-day {
+    min-height: 90px;
+  }
+  
+  .day-content {
+    padding: 10px 8px;
+  }
+  
+  .parsi-day {
+    font-size: 10px;
+  }
+  
+  .parsi-month {
+    font-size: 9px;
+  }
+}
+
+/* Animation for modal */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-overlay {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+  animation: slideUp 0.3s ease-out;
+}
