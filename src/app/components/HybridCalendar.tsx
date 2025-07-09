@@ -661,17 +661,20 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                       {i + 1}
                     </div>
                     
-                    {!isMobile && (
-                      <div style={{
-                        fontSize: '10px',
-                        color: 'var(--text-tertiary)',
-                        lineHeight: '1.2',
-                        marginBottom: '4px',
-                        wordBreak: 'break-word'
-                      }}>
-                        {shenshaiText}
-                      </div>
-                    )}
+                    <div style={{
+                      fontSize: isMobile ? '9px' : '10px',
+                      color: 'var(--text-tertiary)',
+                      lineHeight: '1.2',
+                      marginBottom: '4px',
+                      wordBreak: 'break-word',
+                      height: isMobile ? '24px' : '28px',
+                      overflow: 'hidden',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical'
+                    }}>
+                      {shenshaiText}
+                    </div>
 
                     {/* Events */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
