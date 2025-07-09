@@ -675,7 +675,7 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                     >
                       {dayEvents.slice(0, isMobile ? 3 : 4).map(ev => (
                         <div
-                          key={ev.id}
+                          key={`${ev.id}-${year}-${month}-${i + 1}`}
                           style={{
                             backgroundColor: stringToColor(ev.title),
                             color: 'white',
