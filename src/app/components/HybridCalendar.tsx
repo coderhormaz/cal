@@ -621,7 +621,10 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                     onMouseLeave={e => {
                       if (!isCurrentDay) {
                         (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--surface)';
-                    <div className="calendar-events-container">
+                      }
+                    }}
+                  >
+                    <div className="calendar-day-number">
                       {i + 1}
                     </div>
                     
@@ -667,9 +670,11 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                           {ev.title}
                         </div>
                       ))}
+                      {dayEvents.length > (isMobile ? 2 : 3) && (
                         <div className="more-events-indicator">
                           +{dayEvents.length - (isMobile ? 2 : 3)} more
                         </div>
+                      )}
                       )}
                     </div>
                   </div>
