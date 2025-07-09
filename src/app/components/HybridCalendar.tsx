@@ -547,7 +547,7 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
 
         {/* Calendar Grid */}
         <div className="card">
-          <div className="card-body" style={{ padding: isMobile ? '12px' : '20px' }}>
+          <div className="card-body" style={{ padding: isMobile ? '8px' : '16px' }}>
             <div className="calendar-grid" style={{ marginBottom: '8px' }}>
               {/* Day headers */}
               {daysOfWeek.map(day => (
@@ -575,7 +575,7 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                 const dateObj = new Date(year, month, i + 1);
                 const isCurrentDay = isToday(dateObj);
                 const shenshai = shenshaiDays[i];
-                const shenshaiText = shenshai.month ? `${shenshai.day} ${shenshai.month}` : shenshai.day;
+                const shenshaiText = shenshai.month ? `${shenshai.day}, ${shenshai.month}` : shenshai.day;
                 
                 // Find events for this day
                 const dayEvents = events.filter(ev => {
@@ -609,8 +609,13 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                     key={i}
                     className="calendar-day-cell"
                     style={{
+                      minHeight: isMobile ? '85px' : '100px',
+                      padding: isMobile ? '4px 3px' : '6px 4px',
                       backgroundColor: isCurrentDay ? 'var(--secondary-blue)' : 'var(--surface)',
                       border: isCurrentDay ? '2px solid var(--primary-blue)' : '1px solid var(--border-color)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: isMobile ? '2px' : '3px'
                     }}
                     onClick={() => handleAddEvent(dateObj.toISOString().slice(0, 10))}
                     onMouseEnter={e => {
@@ -624,22 +629,67 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                       }
                     }}
                   >
-                    <div className="calendar-day-number">
+                    <div 
+                      className="calendar-day-number"
+                      style={{
+                        fontSize: isMobile ? '14px' : '16px',
+                        fontWeight: '600',
+                        color: isCurrentDay ? 'var(--primary-blue)' : 'var(--text-primary)',
+                        lineHeight: '1.2',
+                        flexShrink: 0
+                      }}
+                    >
                       {i + 1}
                     </div>
                     
-                    <div className="calendar-parsi-date">
-                      {shenshaiText}
+                    <div 
+                      style={{
+                        fontSize: isMobile ? '8px' : '9px',
+                        color: 'var(--text-tertiary)',
+                        lineHeight: '1.1',
+                        wordBreak: 'break-word',
+                        overflow: 'hidden',
+                        display: '-webkit-box',
+                        WebkitBoxOrient: 'vertical',
+                        WebkitLineClamp: isMobile ? 2 : 2,
+                        height: isMobile ? '16px' : '18px',
+                        flexShrink: 0
+                      }}
+                    >
+                      {shenshaiText.length > (isMobile ? 15 : 20) ? 
+                        `${shenshaiText.substring(0, isMobile ? 15 : 20)}...` : 
+                        shenshaiText
+                      }
                     </div>
 
                     {/* Events */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                      {dayEvents.slice(0, isMobile ? 2 : 3).map(ev => (
+                    <div 
+                      className="calendar-events-container"
+                      style={{ 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        gap: isMobile ? '1px' : '2px',
+                        flex: 1,
+                        overflow: 'hidden'
+                      }}
+                    >
+                      {dayEvents.slice(0, isMobile ? 3 : 4).map(ev => (
                         <div
                           key={ev.id}
-                          className="calendar-day-event-title"
                           style={{
                             backgroundColor: stringToColor(ev.title),
+                            color: 'white',
+                            borderRadius: '3px',
+                            padding: isMobile ? '1px 3px' : '2px 4px',
+                            fontSize: isMobile ? '8px' : '9px',
+                            fontWeight: '500',
+                            cursor: 'pointer',
+                            transition: 'var(--transition)',
+                            textOverflow: 'ellipsis',
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                            lineHeight: '1.2',
+                            flexShrink: 0
                           }}
                           onClick={e => {
                             e.stopPropagation();
@@ -670,11 +720,20 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                           {ev.title}
                         </div>
                       ))}
-                      {dayEvents.length > (isMobile ? 2 : 3) && (
-                        <div className="more-events-indicator">
-                          +{dayEvents.length - (isMobile ? 2 : 3)} more
+                      
+                      {dayEvents.length > (isMobile ? 3 : 4) && (
+                        <div 
+                          style={{
+                            fontSize: isMobile ? '7px' : '8px',
+                            color: 'var(--text-tertiary)',
+                            fontWeight: '500',
+                            textAlign: 'center',
+                            padding: '1px 2px',
+                            flexShrink: 0
+                          }}
+                        >
+                          +{dayEvents.length - (isMobile ? 3 : 4)} more
                         </div>
-                      )}
                       )}
                     </div>
                   </div>
