@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { addMonths, subMonths, startOfMonth, getDaysInMonth, getDay, isToday } from 'date-fns';
 import { supabase } from '../../lib/supabase';
 import EventModal, { EventData } from './EventModal';
+import DayEventsModal from './DayEventsModal';
 
 // Search Modal Component
 function SearchModal({ 
@@ -206,6 +207,20 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [showAllEvents, setShowAllEvents] = useState(false);
+  const [dayEventsModal, setDayEventsModal] = useState<{ open: boolean; date: Date; events: EventData[] }>({
+    open: false,
+    date: new Date(),
+    events: []
+  });
+
+  // Apply dark mode to document
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+  }, [darkMode]);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -235,6 +250,44 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
     });
     setSelectedDate(dateStr);
     setModalOpen(true);
+    setDayEventsModal({ open: false, date: new Date(), events: [] });
+  };
+
+  // Handle day click - show events for that day
+  const handleDayClick = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const dayEvents = events.filter(ev => {
+      const day = date.getDate();
+      const month = date.getMonth();
+      
+      if (ev.calendar_type === 'gregorian') {
+        if (ev.recurrence === 'yearly') {
+          return ev.gregorian_month === month && ev.gregorian_day === day;
+        } else if (ev.recurrence === 'monthly') {
+          return ev.gregorian_day === day;
+        } else {
+          return ev.gregorian_month === month && ev.gregorian_day === day;
+        }
+      } else if (ev.calendar_type === 'parsi') {
+        const dayIndex = date.getDate() - 1;
+        const shenshaiDays = ZCalendar.Shenshai.getRojNamesForMonth(new Date(date.getFullYear(), date.getMonth(), 1));
+        const shenshai = shenshaiDays[dayIndex];
+        if (!shenshai) return false;
+        const parsiMonthIdx = ZCalendar.Shenshai.MAH.indexOf(shenshai.month);
+        const parsiRojIdx = ZCalendar.Shenshai.ROJ.indexOf(shenshai.day);
+        if (parsiMonthIdx === -1 || parsiRojIdx === -1) return false;
+        if (ev.recurrence === 'yearly') {
+          return ev.parsi_month === parsiMonthIdx && ev.parsi_roj === parsiRojIdx + 1;
+        } else if (ev.recurrence === 'monthly') {
+          return ev.parsi_roj === parsiRojIdx + 1;
+        } else {
+          return ev.parsi_month === parsiMonthIdx && ev.parsi_roj === parsiRojIdx + 1;
+        }
+      }
+      return false;
+    });
+
+    setDayEventsModal({ open: true, date, events: dayEvents });
   };
 
   // Save event handler
@@ -265,6 +318,21 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
 
   // Handle event selection from search
   const handleEventSelect = (event: EventData) => {
+    // Navigate to the event's date
+    if (event.calendar_type === 'gregorian') {
+      if (typeof event.gregorian_month === 'number') {
+        const eventDate = new Date(currentDate.getFullYear(), event.gregorian_month, 1);
+        setCurrentDate(eventDate);
+      }
+    } else if (event.calendar_type === 'parsi') {
+      // For Parsi events, we need to find the corresponding Gregorian date
+      if (typeof event.parsi_month === 'number') {
+        // Approximate mapping - this would need proper Parsi to Gregorian conversion
+        const approxMonth = event.parsi_month;
+        const eventDate = new Date(currentDate.getFullYear(), approxMonth, 1);
+        setCurrentDate(eventDate);
+      }
+    }
     setModalInitial(event);
     setModalOpen(true);
   };
@@ -272,7 +340,6 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
   // Toggle dark mode
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
-    // You can implement actual dark mode logic here
   };
 
   // Handle logout
@@ -438,7 +505,7 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
               <div
                 key={i}
                 className={`calendar-day ${isCurrentDay ? 'today' : ''} ${isFirstDay ? 'first-day' : ''} ${isSunday ? 'sunday' : ''}`}
-                onClick={() => handleAddEvent(dateObj.toISOString().slice(0, 10))}
+                onClick={() => handleDayClick(dateObj.toISOString().slice(0, 10))}
               >
                 <div className="day-content">
                   <div className="day-number">{i + 1}</div>
@@ -610,6 +677,27 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
           </div>
         </div>
       )}
+      
+      <DayEventsModal
+        open={dayEventsModal.open}
+        onClose={() => setDayEventsModal({ open: false, date: new Date(), events: [] })}
+        date={dayEventsModal.date}
+        events={dayEventsModal.events}
+        onAddEvent={() => handleAddEvent(dayEventsModal.date.toISOString().slice(0, 10))}
+        onEditEvent={(event) => {
+          setModalInitial(event);
+          setModalOpen(true);
+          setDayEventsModal({ open: false, date: new Date(), events: [] });
+        }}
+        onDeleteEvent={async (id) => {
+          await supabase.from('events').delete().eq('id', id);
+          const { data } = await supabase.from('events').select('*').eq('user_id', user.id);
+          if (data) setEvents(data);
+          // Update day events modal
+          const updatedEvents = dayEventsModal.events.filter(ev => ev.id !== id);
+          setDayEventsModal(prev => ({ ...prev, events: updatedEvents }));
+        }}
+      />
     </div>
   );
 }

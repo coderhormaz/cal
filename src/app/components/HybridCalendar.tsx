@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { addMonths, subMonths, startOfMonth, getDaysInMonth, getDay, isToday } from 'date-fns';
 import { supabase } from '../../lib/supabase';
 import EventModal, { EventData } from './EventModal';
+import DayEventsModal from './DayEventsModal';
 
 // Utility: Generate a color from a string (event title)
 function stringToColor(str: string) {
@@ -157,6 +158,22 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
   const [modalInitial, setModalInitial] = useState<Partial<EventData> | undefined>(undefined);
   const [showAllEvents, setShowAllEvents] = useState(false);
   const [popover, setPopover] = useState<{ event: EventData, position: { x: number, y: number } } | null>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [dayEventsModal, setDayEventsModal] = useState<{ open: boolean; date: Date; events: EventData[] }>({
+    open: false,
+    date: new Date(),
+    events: []
+  });
+  const [darkMode, setDarkMode] = useState(false);
+
+  // Apply dark mode to document
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+  }, [darkMode]);
 
   // Check for mobile viewport
   useEffect(() => {
@@ -195,6 +212,44 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
     }
     setModalOpen(true);
     setSidebarOpen(false);
+    setDayEventsModal({ open: false, date: new Date(), events: [] });
+  };
+
+  // Handle day click - show events for that day
+  const handleDayClick = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const dayEvents = events.filter(ev => {
+      const day = date.getDate();
+      const month = date.getMonth();
+      
+      if (ev.calendar_type === 'gregorian') {
+        if (ev.recurrence === 'yearly') {
+          return ev.gregorian_month === month && ev.gregorian_day === day;
+        } else if (ev.recurrence === 'monthly') {
+          return ev.gregorian_day === day;
+        } else {
+          return ev.gregorian_month === month && ev.gregorian_day === day;
+        }
+      } else if (ev.calendar_type === 'parsi') {
+        const dayIndex = date.getDate() - 1;
+        const shenshaiDays = ZCalendar.Shenshai.getRojNamesForMonth(new Date(date.getFullYear(), date.getMonth(), 1));
+        const shenshai = shenshaiDays[dayIndex];
+        if (!shenshai) return false;
+        const parsiMonthIdx = ZCalendar.Shenshai.MAH.indexOf(shenshai.month);
+        const parsiRojIdx = ZCalendar.Shenshai.ROJ.indexOf(shenshai.day);
+        if (parsiMonthIdx === -1 || parsiRojIdx === -1) return false;
+        if (ev.recurrence === 'yearly') {
+          return ev.parsi_month === parsiMonthIdx && ev.parsi_roj === parsiRojIdx + 1;
+        } else if (ev.recurrence === 'monthly') {
+          return ev.parsi_roj === parsiRojIdx + 1;
+        } else {
+          return ev.parsi_month === parsiMonthIdx && ev.parsi_roj === parsiRojIdx + 1;
+        }
+      }
+      return false;
+    });
+
+    setDayEventsModal({ open: true, date, events: dayEvents });
   };
 
   // Save event handler
@@ -222,6 +277,106 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
     }
     setModalOpen(false);
   };
+
+  // Search Modal Component
+  function SearchModal() {
+    const [searchTerm, setSearchTerm] = useState('');
+    
+    const filteredEvents = events.filter(event =>
+      event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      event.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const handleEventSelect = (event: EventData) => {
+      // Navigate to the event's date
+      if (event.calendar_type === 'gregorian') {
+        if (typeof event.gregorian_month === 'number') {
+          const eventDate = new Date(currentDate.getFullYear(), event.gregorian_month, 1);
+          setCurrentDate(eventDate);
+        }
+      } else if (event.calendar_type === 'parsi') {
+        // For Parsi events, we need to find the corresponding Gregorian date
+        // This is a simplified approach - you might want to implement more precise conversion
+        if (typeof event.parsi_month === 'number') {
+          // Approximate mapping - this would need proper Parsi to Gregorian conversion
+          const approxMonth = event.parsi_month;
+          const eventDate = new Date(currentDate.getFullYear(), approxMonth, 1);
+          setCurrentDate(eventDate);
+        }
+      }
+      setSearchOpen(false);
+      setModalInitial(event);
+      setModalOpen(true);
+    };
+
+    return (
+      <div className="modal-overlay" onClick={() => setSearchOpen(false)}>
+        <div className="modal-content" onClick={e => e.stopPropagation()}>
+          <div className="card-header d-flex align-items-center justify-content-between">
+            <h2 style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-primary)', margin: 0 }}>
+              Search Events
+            </h2>
+            <button 
+              onClick={() => setSearchOpen(false)}
+              className="btn btn-text"
+              style={{ padding: '8px', minHeight: 'auto', fontSize: '20px', color: 'var(--text-tertiary)' }}
+            >
+              ×
+            </button>
+          </div>
+          
+          <div className="card-body">
+            <div className="mb-3">
+              <input
+                type="text"
+                placeholder="Search events..."
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                className="form-control"
+                autoFocus
+              />
+            </div>
+            
+            <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+              {filteredEvents.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '20px', color: 'var(--text-secondary)' }}>
+                  {searchTerm ? 'No events found' : 'Start typing to search events'}
+                </div>
+              ) : (
+                filteredEvents.map(event => (
+                  <div
+                    key={event.id}
+                    style={{
+                      padding: '12px',
+                      borderRadius: 'var(--border-radius)',
+                      cursor: 'pointer',
+                      marginBottom: '8px',
+                      border: '1px solid var(--border-color)',
+                      transition: 'var(--transition)'
+                    }}
+                    onClick={() => handleEventSelect(event)}
+                    onMouseEnter={e => {
+                      (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--surface-variant)';
+                    }}
+                    onMouseLeave={e => {
+                      (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
+                    }}
+                  >
+                    <div style={{ fontWeight: '600', marginBottom: '4px' }}>{event.title}</div>
+                    {event.description && (
+                      <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
+                        {event.description}
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Handler to delete an event
   async function handleDeleteEvent(id: string) {
@@ -395,18 +550,39 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                     {user.email}
                   </span>
                   <button
-                    className="btn btn-primary"
-                    onClick={() => handleAddEvent()}
-                    style={{ fontSize: '14px' }}
+                    className="btn btn-text"
+                    onClick={() => setSearchOpen(true)}
+                    style={{ fontSize: '14px', padding: '8px 12px' }}
+                    title="Search events"
                   >
-                    + Create
+                    🔍
                   </button>
+                  
+                  {!isMobile && (
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => handleAddEvent()}
+                      style={{ fontSize: '14px' }}
+                    >
+                      + Create
+                    </button>
+                  )}
+                  
                   <button
                     className="btn btn-outline"
                     onClick={() => setShowAllEvents(true)}
                     style={{ fontSize: '14px' }}
                   >
                     Manage
+                  </button>
+                  
+                  <button
+                    className="btn btn-text"
+                    onClick={() => setDarkMode(!darkMode)}
+                    style={{ fontSize: '14px', padding: '8px 12px' }}
+                    title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+                  >
+                    {darkMode ? '☀️' : '🌙'}
                   </button>
                 </>
               )}
@@ -617,7 +793,7 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                       flexDirection: 'column',
                       gap: isMobile ? '2px' : '3px'
                     }}
-                    onClick={() => handleAddEvent(dateObj.toISOString().slice(0, 10))}
+                    onClick={() => handleDayClick(dateObj.toISOString().slice(0, 10))}
                     onMouseEnter={e => {
                       if (!isCurrentDay) {
                         (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--surface-variant)';
@@ -786,6 +962,22 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
           onClose={() => setPopover(null)} 
         />
       )}
+      
+      {searchOpen && <SearchModal />}
+      
+      <DayEventsModal
+        open={dayEventsModal.open}
+        onClose={() => setDayEventsModal({ open: false, date: new Date(), events: [] })}
+        date={dayEventsModal.date}
+        events={dayEventsModal.events}
+        onAddEvent={() => handleAddEvent(dayEventsModal.date.toISOString().slice(0, 10))}
+        onEditEvent={(event) => {
+          setModalInitial(event);
+          setModalOpen(true);
+          setDayEventsModal({ open: false, date: new Date(), events: [] });
+        }}
+        onDeleteEvent={handleDeleteEvent}
+      />
     </div>
   );
 }
