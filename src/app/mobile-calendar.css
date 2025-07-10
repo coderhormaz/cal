@@ -4,6 +4,137 @@
   background-color: #ffffff;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: #000000;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode styles */
+.mobile-calendar.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.mobile-calendar.dark-mode .mobile-header {
+  background-color: #1f1f1f;
+  border-bottom-color: #3c4043;
+}
+
+.mobile-calendar.dark-mode .menu-btn,
+.mobile-calendar.dark-mode .search-btn {
+  color: #ffffff;
+}
+
+.mobile-calendar.dark-mode .menu-btn:hover,
+.mobile-calendar.dark-mode .search-btn:hover {
+  background-color: #2d2d30;
+}
+
+.mobile-calendar.dark-mode .month-header {
+  background-color: #1f1f1f;
+}
+
+.mobile-calendar.dark-mode .month-header h1 {
+  color: #ffffff;
+}
+
+.mobile-calendar.dark-mode .nav-btn {
+  color: #ffffff;
+}
+
+.mobile-calendar.dark-mode .nav-btn:hover {
+  background-color: #2d2d30;
+}
+
+.mobile-calendar.dark-mode .calendar-container {
+  background-color: #1f1f1f;
+}
+
+.mobile-calendar.dark-mode .day-header {
+  color: #9aa0a6;
+}
+
+.mobile-calendar.dark-mode .calendar-grid {
+  background-color: #3c4043;
+}
+
+.mobile-calendar.dark-mode .calendar-day {
+  background-color: #1f1f1f;
+}
+
+.mobile-calendar.dark-mode .calendar-day:hover {
+  background-color: #2d2d30;
+}
+
+.mobile-calendar.dark-mode .calendar-day.today {
+  background-color: #1e3a8a;
+}
+
+.mobile-calendar.dark-mode .day-number {
+  color: #ffffff;
+}
+
+.mobile-calendar.dark-mode .calendar-day.today .day-number {
+  color: #4285f4;
+}
+
+.mobile-calendar.dark-mode .parsi-day {
+  color: #9aa0a6;
+}
+
+.mobile-calendar.dark-mode .parsi-month {
+  color: #5f6368;
+}
+
+.mobile-calendar.dark-mode .add-event-section {
+  background-color: #1f1f1f;
+  border-top-color: #3c4043;
+}
+
+.mobile-calendar.dark-mode .add-event-btn {
+  color: #9aa0a6;
+}
+
+.mobile-calendar.dark-mode .add-event-btn:hover {
+  background-color: #2d2d30;
+}
+
+.mobile-calendar.dark-mode .add-event-btn svg {
+  color: #ffffff;
+}
+
+.mobile-calendar.dark-mode .mobile-menu {
+  background-color: #1f1f1f;
+}
+
+.mobile-calendar.dark-mode .mobile-menu-header {
+  border-bottom-color: #3c4043;
+}
+
+.mobile-calendar.dark-mode .mobile-menu-header h3 {
+  color: #ffffff;
+}
+
+.mobile-calendar.dark-mode .mobile-menu-header button {
+  color: #ffffff;
+}
+
+.mobile-calendar.dark-mode .menu-item {
+  color: #ffffff;
+}
+
+.mobile-calendar.dark-mode .menu-item:hover {
+  background-color: #2d2d30;
+}
+
+.mobile-calendar.dark-mode .menu-item.user-info {
+  border-bottom-color: #3c4043;
+}
+
+.mobile-calendar.dark-mode .user-avatar {
+  background-color: #2d2d30;
+}
+
+.mobile-calendar.dark-mode .user-email {
+  color: #9aa0a6;
 }
 
 /* Header */

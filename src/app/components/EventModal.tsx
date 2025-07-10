@@ -54,14 +54,48 @@ export default function EventModal({
     id: initialData?.id
   });
 
+  // Reset form when modal opens/closes or initialData changes
+  React.useEffect(() => {
+    if (open) {
+      setForm({
+        title: initialData?.title || '',
+        description: initialData?.description || '',
+        calendar_type: initialData?.calendar_type || 'gregorian',
+        gregorian_month: initialData?.gregorian_month ?? 0,
+        gregorian_day: initialData?.gregorian_day ?? 1,
+        parsi_month: initialData?.parsi_month ?? 0,
+        parsi_roj: initialData?.parsi_roj ?? 1,
+        recurrence: initialData?.recurrence || '',
+        reminder: initialData?.reminder ?? false,
+        id: initialData?.id
+      });
+    }
+  }, [open, initialData]);
+
   const handleRecurrenceChange = (val: string) => {
     setForm(f => ({ ...f, recurrence: val as EventData['recurrence'] }));
+  };
+
+  const handleClose = () => {
+    // Clear form when closing
+    setForm({
+      title: '',
+      description: '',
+      calendar_type: 'gregorian',
+      gregorian_month: 0,
+      gregorian_day: 1,
+      parsi_month: 0,
+      parsi_roj: 1,
+      recurrence: '',
+      reminder: false
+    });
+    onClose();
   };
 
   if (!open) return null;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay" onClick={handleClose}>
       <div className="modal-content" onClick={e => e.stopPropagation()}>
         <div className="card-header d-flex align-items-center justify-content-between">
           <h2 style={{ 
@@ -73,7 +107,7 @@ export default function EventModal({
             {form.id ? 'Edit Event' : 'New Event'}
           </h2>
           <button 
-            onClick={onClose}
+            onClick={handleClose}
             className="btn btn-text"
             style={{ 
               padding: '8px',
@@ -267,7 +301,7 @@ export default function EventModal({
             <div className="d-flex justify-content-between gap-3" style={{ flexWrap: 'wrap' }}>
               <button 
                 type="button" 
-                onClick={onClose} 
+                onClick={handleClose} 
                 className="btn btn-secondary"
                 style={{ flex: '1', minWidth: '120px' }}
               >
