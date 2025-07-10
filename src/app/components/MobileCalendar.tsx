@@ -196,7 +196,7 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
         {/* Day Headers */}
         <div className="day-headers">
           {daysOfWeek.map((day, index) => (
-            <div key={day} className={`day-header ${index === 6 ? 'sunday' : ''}`}>
+            <div key={`day-${index}`} className={`day-header ${index === 6 ? 'sunday' : ''}`}>
               {day}
             </div>
           ))}
