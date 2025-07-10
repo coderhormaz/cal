@@ -265,9 +265,9 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
                   {/* Events */}
                   {dayEvents.length > 0 && (
                     <div className="events-container">
-                      {dayEvents.slice(0, 2).map(ev => (
+                      {dayEvents.slice(0, 2).map((ev, eventIndex) => (
                         <div
-                          key={ev.id || `temp-${Math.random().toString(36).substring(2, 15)}`}
+                          key={ev.id || `temp-event-${eventIndex}`}
                           className="event-dot"
                           style={{ backgroundColor: stringToColor(ev.title) }}
                         />

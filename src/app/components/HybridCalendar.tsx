@@ -673,9 +673,9 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                         overflow: 'hidden'
                       }}
                     >
-                      {dayEvents.slice(0, isMobile ? 3 : 4).map(ev => (
+                      {dayEvents.slice(0, isMobile ? 3 : 4).map((ev, eventIndex) => (
                         <div
-                          key={ev.id || `temp-${Math.random().toString(36).substring(2, 15)}`}
+                          key={ev.id || `temp-event-${eventIndex}`}
                           style={{
                             backgroundColor: stringToColor(ev.title),
                             color: 'white',
