@@ -673,23 +673,26 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                         overflow: 'hidden'
                       }}
                     >
-                      {dayEvents.slice(0, isMobile ? 3 : 4).map((ev, eventIndex) => (
+                      {dayEvents.slice(0, isMobile ? 2 : 3).map((ev, eventIndex) => (
                         <div
                           key={ev.id || `temp-event-${eventIndex}`}
                           style={{
                             backgroundColor: stringToColor(ev.title),
                             color: 'white',
                             borderRadius: '3px',
-                            padding: isMobile ? '1px 3px' : '2px 4px',
-                            fontSize: isMobile ? '8px' : '9px',
+                            padding: isMobile ? '2px 4px' : '3px 6px',
+                            fontSize: isMobile ? '9px' : '10px',
                             fontWeight: '500',
                             cursor: 'pointer',
                             transition: 'var(--transition)',
-                            textOverflow: 'ellipsis',
+                            wordBreak: 'break-word',
                             overflow: 'hidden',
-                            whiteSpace: 'nowrap',
+                            display: '-webkit-box',
+                            WebkitBoxOrient: 'vertical',
+                            WebkitLineClamp: isMobile ? 2 : 2,
                             lineHeight: '1.2',
-                            flexShrink: 0
+                            flexShrink: 0,
+                            maxHeight: isMobile ? '32px' : '36px'
                           }}
                           onClick={e => {
                             e.stopPropagation();
@@ -721,7 +724,7 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                         </div>
                       ))}
                       
-                      {dayEvents.length > (isMobile ? 3 : 4) && (
+                      {dayEvents.length > (isMobile ? 2 : 3) && (
                         <div 
                           style={{
                             fontSize: isMobile ? '7px' : '8px',
@@ -732,7 +735,7 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                             flexShrink: 0
                           }}
                         >
-                          +{dayEvents.length - (isMobile ? 3 : 4)} more
+                          +{dayEvents.length - (isMobile ? 2 : 3)} more
                         </div>
                       )}
                     </div>
