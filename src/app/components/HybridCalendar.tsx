@@ -462,7 +462,7 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                         {ev.calendar_type === 'gregorian'
                           ? `Gregorian: ${typeof ev.gregorian_month === 'number' ? (ZCalendar.Shenshai.MAH[ev.gregorian_month] || ev.gregorian_month + 1) : ''} ${ev.gregorian_day}`
                           : `Parsi: ${typeof ev.parsi_month === 'number' ? (ZCalendar.Shenshai.MAH[ev.parsi_month] || ev.parsi_month + 1) : ''} ${ev.parsi_roj}`}
-                        {ev.recurrence && ev.recurrence !== 'none' ? ` • Repeats ${ev.recurrence}` : ''}
+                        {ev.recurrence ? ` • Repeats ${ev.recurrence}` : ''}
                       </div>
                     </div>
                     

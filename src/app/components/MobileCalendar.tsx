@@ -202,7 +202,7 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
   const [events, setEvents] = useState<EventData[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalInitial, setModalInitial] = useState<Partial<EventData> | undefined>(undefined);
-  const [selectedDate, setSelectedDate] = useState<string>('');
+  // removed unused selectedDate state
   const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
@@ -248,7 +248,6 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
       gregorian_month: date.getMonth(),
       gregorian_day: date.getDate(),
     });
-    setSelectedDate(dateStr);
     setModalOpen(true);
     setDayEventsModal({ open: false, date: new Date(), events: [] });
   };

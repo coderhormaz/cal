@@ -134,7 +134,7 @@ export default function DayEventsModal({
                       )}
                       <div style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>
                         {event.calendar_type === 'gregorian' ? 'Gregorian' : 'Parsi'} Calendar
-                        {event.recurrence && event.recurrence !== 'none' ? ` • Repeats ${event.recurrence}` : ''}
+                        {event.recurrence ? ` • Repeats ${event.recurrence}` : ''}
                       </div>
                     </div>
                     
