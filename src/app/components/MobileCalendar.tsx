@@ -531,10 +531,13 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
                             padding: '2px 4px',
                             borderRadius: '3px',
                             marginBottom: '1px',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                            cursor: 'pointer'
+                            overflow: 'visible',
+                            textOverflow: 'unset',
+                            whiteSpace: 'normal',
+                            wordBreak: 'break-word',
+                            cursor: 'pointer',
+                            width: '100%',
+                            display: 'block',
                           }}
                           onClick={e => {
                             e.stopPropagation();

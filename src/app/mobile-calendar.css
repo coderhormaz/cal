@@ -349,6 +349,8 @@
   cursor: pointer;
   transition: background-color 0.2s;
   position: relative;
+  min-width: 0;
+  /* overflow: hidden removed to allow content to expand vertically */
 }
 
 .calendar-day:hover {
@@ -424,14 +426,23 @@
   flex-direction: column;
   gap: 1px;
   margin-top: auto;
+  width: 100%;
 }
 
 .event-title {
   font-weight: 500;
   line-height: 1.2;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  width: 100%;
+  max-width: none;
+  display: block;
+  flex-shrink: 1;
+  /* Ensure full wrapping and no truncation */
 }
 
-.more-events {
+ .more-events {
   font-size: 8px;
   color: #666666;
   margin-left: 2px;
