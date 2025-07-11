@@ -206,41 +206,8 @@ export default function EventModal({
               </div>
             </div>
 
-            {form.calendar_type === 'gregorian' && (
-              <div className="mb-3">
-                <label style={{ 
-                  display: 'block', 
-                  fontSize: '14px', 
-                  fontWeight: '500', 
-                  color: 'var(--text-primary)',
-                  marginBottom: '6px'
-                }}>
-                  Date
-                </label>
-                <div className="d-flex gap-2">
-                  {form.recurrence !== 'monthly' && (
-                    <select 
-                      value={form.gregorian_month} 
-                      onChange={e => setForm(f => ({ ...f, gregorian_month: Number(e.target.value) }))} 
-                      className="form-control"
-                      style={{ flex: '2' }}
-                    >
-                      {gregorianMonths.map((m, i) => <option key={i} value={i}>{m}</option>)}
-                    </select>
-                  )}
-                  <select 
-                    value={form.gregorian_day} 
-                    onChange={e => setForm(f => ({ ...f, gregorian_day: Number(e.target.value) }))} 
-                    className="form-control"
-                    style={{ flex: '1' }}
-                  >
-                    {gregorianDays.map(d => <option key={d} value={d}>{d}</option>)}
-                  </select>
-                </div>
-              </div>
-            )}
 
-            {form.calendar_type === 'parsi' && (
+            {(form.calendar_type === 'gregorian' || form.calendar_type === 'parsi') && (
               <div className="mb-3">
                 <label style={{ 
                   display: 'block', 
@@ -251,25 +218,57 @@ export default function EventModal({
                 }}>
                   Date
                 </label>
-                <div className="d-flex gap-2">
-                  {form.recurrence !== 'monthly' && (
-                    <select 
-                      value={form.parsi_month} 
-                      onChange={e => setForm(f => ({ ...f, parsi_month: Number(e.target.value) }))} 
-                      className="form-control"
-                      style={{ flex: '2' }}
-                    >
-                      {parsiMonths.map((m, i) => <option key={i} value={i}>{m}</option>)}
-                    </select>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {form.calendar_type === 'gregorian' && (
+                    <>
+                      <label style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '2px' }}>Month</label>
+                      <select 
+                        value={form.gregorian_month} 
+                        onChange={e => setForm(f => ({ ...f, gregorian_month: Number(e.target.value) }))} 
+                        className="form-control"
+                        style={{ marginBottom: form.recurrence === 'monthly' ? 0 : '4px' }}
+                      >
+                        {gregorianMonths.map((m, i) => <option key={i} value={i}>{m}</option>)}
+                      </select>
+                      {form.recurrence !== 'monthly' && (
+                        <>
+                          <label style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '2px', marginTop: '2px' }}>Day</label>
+                          <select 
+                            value={form.gregorian_day} 
+                            onChange={e => setForm(f => ({ ...f, gregorian_day: Number(e.target.value) }))} 
+                            className="form-control"
+                          >
+                            {gregorianDays.map(d => <option key={d} value={d}>{d}</option>)}
+                          </select>
+                        </>
+                      )}
+                    </>
                   )}
-                  <select 
-                    value={form.parsi_roj} 
-                    onChange={e => setForm(f => ({ ...f, parsi_roj: Number(e.target.value) }))} 
-                    className="form-control"
-                    style={{ flex: '1' }}
-                  >
-                    {parsiRoj.map((r, idx) => <option key={idx + 1} value={idx + 1}>{r}</option>)}
-                  </select>
+                  {form.calendar_type === 'parsi' && (
+                    <>
+                      <label style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '2px' }}>Mah</label>
+                      <select 
+                        value={form.parsi_month} 
+                        onChange={e => setForm(f => ({ ...f, parsi_month: Number(e.target.value) }))} 
+                        className="form-control"
+                        style={{ marginBottom: form.recurrence === 'monthly' ? 0 : '4px' }}
+                      >
+                        {parsiMonths.map((m, i) => <option key={i} value={i}>{m}</option>)}
+                      </select>
+                      {form.recurrence !== 'monthly' && (
+                        <>
+                          <label style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '2px', marginTop: '2px' }}>Roj</label>
+                          <select 
+                            value={form.parsi_roj} 
+                            onChange={e => setForm(f => ({ ...f, parsi_roj: Number(e.target.value) }))} 
+                            className="form-control"
+                          >
+                            {parsiRoj.map((r, idx) => <option key={idx + 1} value={idx + 1}>{r}</option>)}
+                          </select>
+                        </>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             )}
