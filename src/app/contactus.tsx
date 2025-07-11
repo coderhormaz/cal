@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Clock, Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { Send, CheckCircle, AlertCircle } from 'lucide-react';
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -9,8 +9,8 @@ const ContactForm = () => {
     message: ''
   });
   
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<string | null>(null);
+  const [isSubmitting] = useState(false);
+  const [submitStatus] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -19,42 +19,7 @@ const ContactForm = () => {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus(null);
-
-    try {
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          access_key: '12ce0046-f532-4294-af0a-d8de702cb455',
-          ...formData,
-          from_name: formData.name,
-          subject: `Contact Form Message from ${formData.name}`,
-        }),
-      });
-
-      if (response.ok) {
-        setSubmitStatus('success');
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          message: ''
-        });
-      } else {
-        setSubmitStatus('error');
-      }
-    } catch (error) {
-      setSubmitStatus('error');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  // handleSubmit removed (was unused)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12 px-4">
@@ -65,7 +30,7 @@ const ContactForm = () => {
             Contact Us
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon as possible.
           </p>
         </div>
         <div className="hidden lg:block">
@@ -92,13 +57,15 @@ const ContactForm = () => {
             {submitStatus === 'success' && (
               <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center space-x-3">
                 <CheckCircle className="w-5 h-5 text-green-600" />
-                <p className="text-green-800">Message sent successfully! We'll get back to you soon.</p>
+                <p className="text-green-800">Message sent successfully! We&apos;ll get back to you soon.</p>
+                <p className="text-green-800">Message sent successfully! We&apos;ll get back to you soon.</p>
               </div>
             )}
 
             {submitStatus === 'error' && (
               <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center space-x-3">
                 <AlertCircle className="w-5 h-5 text-red-600" />
+                <p className="text-red-800">Failed to send message. Please try again or contact us directly.</p>
                 <p className="text-red-800">Failed to send message. Please try again or contact us directly.</p>
               </div>
             )}

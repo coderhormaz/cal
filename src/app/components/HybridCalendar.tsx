@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { addMonths, subMonths, startOfMonth, getDaysInMonth, getDay, isToday } from 'date-fns';
 import { supabase } from '../../lib/supabase';
 import EventModal, { EventData } from './EventModal';
@@ -506,7 +507,7 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
               )}
               
               <div className="d-flex align-items-center gap-3">
-                <img src="/logo.jpeg" alt="Innovative Hormaz Technologies Logo" style={{ height: '32px', width: '32px', borderRadius: '6px', objectFit: 'cover' }} />
+                <Image src="/logo.jpeg" alt="Innovative Hormaz Technologies Logo" width={32} height={32} style={{ borderRadius: '6px', objectFit: 'cover' }} />
                 <h1 style={{ 
                   fontSize: isMobile ? '18px' : '22px', 
                   fontWeight: 700, 

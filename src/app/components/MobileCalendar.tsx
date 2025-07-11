@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { addMonths, subMonths, startOfMonth, getDaysInMonth, getDay, isToday } from 'date-fns';
 import { supabase } from '../../lib/supabase';
 import EventModal, { EventData } from './EventModal';
@@ -390,7 +391,7 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
           </svg>
         </button>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, justifyContent: 'center', marginLeft: '24px' }}>
-          <img src="/logo.jpeg" alt="Innovative Hormaz Technologies Logo" style={{ height: '32px', width: '32px', borderRadius: '6px', objectFit: 'cover' }} />
+          <Image src="/logo.jpeg" alt="Innovative Hormaz Technologies Logo" width={32} height={32} style={{ borderRadius: '6px', objectFit: 'cover' }} />
           <span style={{ fontWeight: 700, fontSize: '16px', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>Innovative Hormaz Technologies</span>
         </div>
         <button className="search-btn" onClick={() => setSearchOpen(true)}>
@@ -443,7 +444,7 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
         <div className="mobile-menu-overlay" onClick={() => setMenuOpen(false)}>
           <div className="mobile-menu" onClick={e => e.stopPropagation()}>
             <div className="mobile-menu-header">
-              <img src="/logo.jpeg" alt="Innovative Hormaz Technologies Logo" style={{ height: '32px', width: '32px', borderRadius: '6px', objectFit: 'cover', marginRight: '8px' }} />
+            <Image src="/logo.jpeg" alt="Innovative Hormaz Technologies Logo" width={32} height={32} style={{ borderRadius: '6px', objectFit: 'cover', marginRight: '8px' }} />
               <h3 style={{ fontSize: '18px', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>Innovative Hormaz Technologies</h3>
               <button onClick={() => setMenuOpen(false)}>×</button>
             </div>

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Clock, Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { Send, CheckCircle, AlertCircle } from 'lucide-react';
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +12,7 @@ const ContactForm = () => {
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<string | null>(null);
+  // Removed unused variable 'error'
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -50,7 +51,7 @@ const ContactForm = () => {
       } else {
         setSubmitStatus('error');
       }
-    } catch (error) {
+    } catch {
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -66,7 +67,7 @@ const ContactForm = () => {
             Contact Us
           </h1>
           <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
-            We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            We&apos;d love to hear from you. Fill out the form and we&apos;ll get back to you soon.
           </p>
         </div>
         <div className="grid gap-8">
@@ -89,7 +90,7 @@ const ContactForm = () => {
             {submitStatus === 'success' && (
               <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center space-x-3">
                 <CheckCircle className="w-5 h-5 text-green-600" />
-                <p className="text-green-800">Message sent successfully! We'll get back to you soon.</p>
+                <p className="text-green-800">Message sent successfully! We&apos;ll get back to you soon.</p>
               </div>
             )}
 
