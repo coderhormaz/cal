@@ -402,8 +402,8 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
       </div>
 
       {/* Month/Year Header */}
-      <div className="month-header">
-        <div style={{ textAlign: 'center', fontWeight: 700, fontSize: '18px', color: 'var(--text-primary)', marginBottom: '2px', letterSpacing: '0.5px' }}>
+      <div className="month-header" style={{ marginTop: '0px' }}>
+        <div style={{ textAlign: 'center', fontWeight: 700, fontSize: '18px', color: 'var(--text-primary)', marginBottom: '0px', letterSpacing: '0.5px' }}>
           Parsi Shenshai Calendar
         </div>
         <div className="month-navigation">
@@ -426,6 +426,15 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
               <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
+        </div>
+        <h3 style={{ fontWeight: 'bold', color: '#000', textAlign: 'center', margin: 0 }}>MAH</h3>
+        {/* Parsi months for this Gregorian month */}
+        <div style={{ textAlign: 'center', fontWeight: 600, fontSize: '15px', color: 'var(--text-secondary)', marginTop: '2px', letterSpacing: '0.5px' }}>
+          {(() => {
+            // Get unique Parsi months in this Gregorian month
+            const months = Array.from(new Set(shenshaiDays.map(d => d.month).filter(Boolean)));
+            return months.length > 0 ? months.join(' - ') : '';
+          })()}
         </div>
       </div>
 
@@ -566,7 +575,6 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
                   {shenshai && (
                     <div className="parsi-date">
                       <div className="parsi-day">{shenshai.day}</div>
-                      {shenshai.month && <div className="parsi-month">{shenshai.month}</div>}
                     </div>
                   )}
                   
@@ -627,10 +635,11 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
       <div className="add-event-section">
         <button 
           className="add-event-btn"
+          style={{ fontSize: '13px', padding: '6px 12px', minHeight: 'unset', height: '32px', borderRadius: '18px', display: 'flex', alignItems: 'center', gap: '6px' }}
           onClick={() => handleAddEvent(new Date().toISOString().slice(0, 10))}
         >
-          <span>Add event on {new Date().getDate()} {new Date().toLocaleString('default', { month: 'short' })}</span>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <span style={{ fontSize: '13px' }}>Add event on {new Date().getDate()} {new Date().toLocaleString('default', { month: 'short' })}</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
             <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
           </svg>
         </button>
