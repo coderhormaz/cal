@@ -20,8 +20,7 @@ function SearchModal({
   const [searchTerm, setSearchTerm] = useState('');
   
   const filteredEvents = events.filter(event =>
-    event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    event.description.toLowerCase().includes(searchTerm.toLowerCase())
+    event.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (!open) return null;
@@ -82,12 +81,10 @@ function SearchModal({
                     (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
                   }}
                 >
-                  <div style={{ fontWeight: '600', marginBottom: '4px' }}>{event.title}</div>
-                  {event.description && (
-                    <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
-                      {event.description}
-                    </div>
-                  )}
+                  <div style={{ fontWeight: '600', marginBottom: '4px' }}>
+                    {event.title}{event.event_type && event.event_type !== 'none' ? ` ${event.event_type.charAt(0).toUpperCase() + event.event_type.slice(1)}` : ''}
+                  </div>
+
                 </div>
               ))
             )}
@@ -99,13 +96,18 @@ function SearchModal({
 }
 
 // Utility: Generate a color from a string (event title)
-function stringToColor(str: string) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+function getEventColor(eventType: string) {
+  switch (eventType) {
+    case 'birthday':
+      return '#a259e6'; // purple
+    case 'wedding':
+      return '#34c759'; // green
+    case 'navjote':
+      return '#007aff'; // blue
+    case 'none':
+    default:
+      return '#ff9500'; // orange
   }
-  const h = hash % 360;
-  return `hsl(${h}, 65%, 55%)`;
 }
 
 const ZCalendar = {
@@ -525,7 +527,7 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
                           key={ev.id || `temp-event-${eventIndex}`}
                           className="event-title"
                           style={{ 
-                            backgroundColor: stringToColor(ev.title),
+                            backgroundColor: getEventColor(ev.event_type),
                             color: 'white',
                             fontSize: '8px',
                             padding: '2px 4px',
@@ -545,7 +547,7 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
                             setModalOpen(true);
                           }}
                         >
-                          {ev.title}
+                          {ev.title}{ev.event_type && ev.event_type !== 'none' ? ` ${ev.event_type.charAt(0).toUpperCase() + ev.event_type.slice(1)}` : ''}
                         </div>
                       ))}
                       {dayEvents.length > 1 && (
@@ -635,20 +637,16 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
                       <div style={{ 
                         width: '4px',
                         height: '40px',
-                        backgroundColor: stringToColor(ev.title),
+                        backgroundColor: getEventColor(ev.event_type),
                         borderRadius: '2px',
                         flexShrink: 0
                       }}></div>
                       
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontWeight: '600', fontSize: '16px', marginBottom: '4px' }}>
-                          {ev.title}
+                          {ev.title}{ev.event_type && ev.event_type !== 'none' ? ` ${ev.event_type.charAt(0).toUpperCase() + ev.event_type.slice(1)}` : ''}
                         </div>
-                        {ev.description && (
-                          <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
-                            {ev.description}
-                          </div>
-                        )}
+
                       </div>
                       
                       <div className="d-flex gap-2">

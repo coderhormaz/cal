@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 export interface EventData {
   id?: string;
   title: string;
-  description: string;
+  event_type: 'none' | 'birthday' | 'wedding' | 'navjote';
   calendar_type: 'gregorian' | 'parsi';
   gregorian_month?: number;
   gregorian_day?: number;
@@ -43,7 +43,7 @@ export default function EventModal({
 }) {
   const [form, setForm] = useState<EventData>({
     title: initialData?.title || '',
-    description: initialData?.description || '',
+    event_type: (initialData?.event_type as EventData['event_type']) || 'none',
     calendar_type: initialData?.calendar_type || 'gregorian',
     gregorian_month: initialData?.gregorian_month ?? 0,
     gregorian_day: initialData?.gregorian_day ?? 1,
@@ -59,7 +59,7 @@ export default function EventModal({
     if (open) {
       setForm({
         title: initialData?.title || '',
-        description: initialData?.description || '',
+        event_type: (initialData?.event_type as EventData['event_type']) || 'none',
         calendar_type: initialData?.calendar_type || 'gregorian',
         gregorian_month: initialData?.gregorian_month ?? 0,
         gregorian_day: initialData?.gregorian_day ?? 1,
@@ -80,7 +80,7 @@ export default function EventModal({
     // Clear form when closing
     setForm({
       title: '',
-      description: '',
+      event_type: 'none',
       calendar_type: 'gregorian',
       gregorian_month: 0,
       gregorian_day: 1,
@@ -151,16 +151,18 @@ export default function EventModal({
                 color: 'var(--text-primary)',
                 marginBottom: '6px'
               }}>
-                Description
+                Event Type
               </label>
-              <textarea 
-                placeholder="Add description" 
-                value={form.description} 
-                onChange={e => setForm(f => ({ ...f, description: e.target.value }))} 
+              <select
+                value={form.event_type}
+                onChange={e => setForm(f => ({ ...f, event_type: e.target.value as EventData['event_type'] }))}
                 className="form-control"
-                rows={3}
-                style={{ resize: 'vertical', minHeight: '80px' }}
-              />
+              >
+                <option value="none">None</option>
+                <option value="birthday">Birthday</option>
+                <option value="wedding">Wedding</option>
+                <option value="navjote">Navjote</option>
+              </select>
             </div>
 
             <div className="d-flex gap-3 mb-3" style={{ flexWrap: 'wrap' }}>
