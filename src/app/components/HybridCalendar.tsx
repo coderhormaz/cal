@@ -506,26 +506,15 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
               )}
               
               <div className="d-flex align-items-center gap-3">
-                <div style={{ 
-                  width: '32px', 
-                  height: '32px', 
-                  backgroundColor: 'var(--primary-blue)', 
-                  borderRadius: '8px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '18px',
-                  color: 'white'
-                }}>
-                  📅
-                </div>
+                <img src="/logo.jpeg" alt="Innovative Hormaz Technologies Logo" style={{ height: '32px', width: '32px', borderRadius: '6px', objectFit: 'cover' }} />
                 <h1 style={{ 
                   fontSize: isMobile ? '18px' : '22px', 
-                  fontWeight: '400', 
-                  color: 'var(--text-secondary)',
-                  margin: 0
+                  fontWeight: 700, 
+                  color: 'var(--text-primary)',
+                  margin: 0,
+                  whiteSpace: 'nowrap'
                 }}>
-                  Calendar
+                  Innovative Hormaz Technologies
                 </h1>
               </div>
             </div>
@@ -635,7 +624,6 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
               >
                 + Create Event
               </button>
-              
               <button
                 className="btn btn-outline"
                 onClick={() => setShowAllEvents(true)}
@@ -643,7 +631,20 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
               >
                 Manage Events
               </button>
-              
+              <button
+                className="btn btn-outline"
+                onClick={() => window.location.href = '/Feedback'}
+                style={{ width: '100%', justifyContent: 'flex-start' }}
+              >
+                Send Feedback
+              </button>
+              <button
+                className="btn btn-outline"
+                onClick={() => window.location.href = '/contactus'}
+                style={{ width: '100%', justifyContent: 'flex-start' }}
+              >
+                Contact Us
+              </button>
               <div style={{ 
                 padding: '12px 0', 
                 borderTop: '1px solid var(--border-color)',

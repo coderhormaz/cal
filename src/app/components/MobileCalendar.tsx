@@ -352,13 +352,16 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
   return (
     <div className={`mobile-calendar ${darkMode ? 'dark-mode' : ''}`}>
       {/* Header */}
-      <div className="mobile-header">
+      <div className="mobile-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 8px' }}>
         <button className="menu-btn" onClick={() => setMenuOpen(true)}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
           </svg>
         </button>
-        
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, justifyContent: 'center', marginLeft: '24px' }}>
+          <img src="/logo.jpeg" alt="Innovative Hormaz Technologies Logo" style={{ height: '32px', width: '32px', borderRadius: '6px', objectFit: 'cover' }} />
+          <span style={{ fontWeight: 700, fontSize: '16px', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>Innovative Hormaz Technologies</span>
+        </div>
         <button className="search-btn" onClick={() => setSearchOpen(true)}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/>
@@ -369,6 +372,9 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
 
       {/* Month/Year Header */}
       <div className="month-header">
+        <div style={{ textAlign: 'center', fontWeight: 700, fontSize: '18px', color: 'var(--text-primary)', marginBottom: '2px', letterSpacing: '0.5px' }}>
+          Parsi Shenshai Calendar
+        </div>
         <div className="month-navigation">
           <button 
             className="nav-btn"
@@ -397,10 +403,11 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
         <div className="mobile-menu-overlay" onClick={() => setMenuOpen(false)}>
           <div className="mobile-menu" onClick={e => e.stopPropagation()}>
             <div className="mobile-menu-header">
-              <h3>Menu</h3>
+              <img src="/logo.jpeg" alt="Innovative Hormaz Technologies Logo" style={{ height: '32px', width: '32px', borderRadius: '6px', objectFit: 'cover', marginRight: '8px' }} />
+              <h3 style={{ fontSize: '18px', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>Innovative Hormaz Technologies</h3>
               <button onClick={() => setMenuOpen(false)}>×</button>
             </div>
-            
+
             <div className="mobile-menu-content">
               <div className="menu-item user-info">
                 <div className="user-avatar">
@@ -423,7 +430,20 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
                 </svg>
                 Manage Events
               </button>
-              
+              <button className="menu-item" onClick={() => window.location.href = '/Feedback'}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" strokeWidth="2"/>
+                  <path d="M8 12h8M12 8v8" stroke="currentColor" strokeWidth="2"/>
+                </svg>
+                Feedback
+              </button>
+              <button className="menu-item" onClick={() => window.location.href = '/contactus'}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                  <path d="M12 8v4M12 16h.01" stroke="currentColor" strokeWidth="2"/>
+                </svg>
+                Contact Us
+              </button>
               <button className="menu-item" onClick={toggleDarkMode}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                   {darkMode ? (
