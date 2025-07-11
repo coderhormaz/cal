@@ -122,16 +122,7 @@ export default function DayEventsModal({
                       }}>
                         {event.title}
                       </div>
-                      {event.description && (
-                        <div style={{ 
-                          fontSize: '14px', 
-                          color: 'var(--text-secondary)', 
-                          marginBottom: '8px', 
-                          lineHeight: '1.4' 
-                        }}>
-                          {event.description}
-                        </div>
-                      )}
+                        
                       <div style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>
                         {event.calendar_type === 'gregorian' ? 'Gregorian' : 'Parsi'} Calendar
                         {event.recurrence ? ` • Repeats ${event.recurrence}` : ''}

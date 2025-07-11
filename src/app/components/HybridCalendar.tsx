@@ -28,11 +28,7 @@ function EventPopover({ event, position, onClose }: { event: EventData, position
       <div className="event-popover-title">
         {event.title}
       </div>
-      {event.description && (
-        <div className="event-popover-description">
-          {event.description}
-        </div>
-      )}
+      
       <div className="event-popover-details">
         {event.calendar_type === 'gregorian'
           ? `Gregorian: ${(typeof event.gregorian_month === 'number' ? ZCalendar.Shenshai.MAH[event.gregorian_month] : '')} ${event.gregorian_day}`
@@ -284,7 +280,7 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
     
     const filteredEvents = events.filter(event =>
       event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.description.toLowerCase().includes(searchTerm.toLowerCase())
+       false
     );
 
     const handleEventSelect = (event: EventData) => {
@@ -363,11 +359,7 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                     }}
                   >
                     <div style={{ fontWeight: '600', marginBottom: '4px' }}>{event.title}</div>
-                    {event.description && (
-                      <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
-                        {event.description}
-                      </div>
-                    )}
+
                   </div>
                 ))
               )}
@@ -453,11 +445,7 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                       <div style={{ fontWeight: '600', fontSize: '16px', marginBottom: '4px', color: 'var(--text-primary)' }}>
                         {ev.title}
                       </div>
-                      {ev.description && (
-                        <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '8px', lineHeight: '1.4' }}>
-                          {ev.description}
-                        </div>
-                      )}
+
                       <div style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>
                         {ev.calendar_type === 'gregorian'
                           ? `Gregorian: ${typeof ev.gregorian_month === 'number' ? (ZCalendar.Shenshai.MAH[ev.gregorian_month] || ev.gregorian_month + 1) : ''} ${ev.gregorian_day}`
