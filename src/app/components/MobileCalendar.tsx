@@ -349,8 +349,39 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
     window.location.reload();
   };
 
+  // Swipe gesture state
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchEndX, setTouchEndX] = useState<number | null>(null);
+
+  // Handle swipe gesture
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    setTouchStartX(e.changedTouches[0].clientX);
+  };
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    setTouchEndX(e.changedTouches[0].clientX);
+  };
+  const handleTouchEnd = () => {
+    if (touchStartX !== null && touchEndX !== null) {
+      const diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 50) { // minimum swipe distance
+        if (diff > 0) {
+          setCurrentDate(addMonths(currentDate, 1)); // swipe left: next month
+        } else {
+          setCurrentDate(subMonths(currentDate, 1)); // swipe right: previous month
+        }
+      }
+    }
+    setTouchStartX(null);
+    setTouchEndX(null);
+  };
+
   return (
-    <div className={`mobile-calendar ${darkMode ? 'dark-mode' : ''}`}>
+    <div
+      className={`mobile-calendar ${darkMode ? 'dark-mode' : ''}`}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* Header */}
       <div className="mobile-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 8px' }}>
         <button className="menu-btn" onClick={() => setMenuOpen(true)}>
