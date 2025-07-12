@@ -390,9 +390,8 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
             <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
           </svg>
         </button>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, justifyContent: 'center', marginLeft: '24px' }}>
-          <Image src="/logo.jpeg" alt="Innovative Hormaz Technologies Logo" width={32} height={32} style={{ borderRadius: '6px', objectFit: 'cover' }} />
-          <span style={{ fontWeight: 700, fontSize: '16px', color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>Innovative Hormaz Technologies</span>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '24px' }}>
+          <span style={{ fontWeight: 700, fontSize: '18px', color: 'var(--text-primary)', whiteSpace: 'nowrap', textAlign: 'center' }}>Parsi Shenshai Calendar</span>
         </div>
         <button className="search-btn" onClick={() => setSearchOpen(true)}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -404,9 +403,6 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
 
       {/* Month/Year Header */}
       <div className="month-header" style={{ marginTop: '0px' }}>
-        <div style={{ textAlign: 'center', fontWeight: 700, fontSize: '18px', color: 'var(--text-primary)', marginBottom: '0px', letterSpacing: '0.5px' }}>
-          Parsi Shenshai Calendar
-        </div>
         <div className="month-navigation">
           <button 
             className="nav-btn"
@@ -428,14 +424,16 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
             </svg>
           </button>
         </div>
-        <h3 style={{ fontWeight: 'bold', color: '#000', textAlign: 'center', margin: 0 }}>MAH</h3>
-        {/* Parsi months for this Gregorian month */}
-        <div style={{ textAlign: 'center', fontWeight: 600, fontSize: '15px', color: 'var(--text-secondary)', marginTop: '2px', letterSpacing: '0.5px' }}>
-          {(() => {
-            // Get unique Parsi months in this Gregorian month
-            const months = Array.from(new Set(shenshaiDays.map(d => d.month).filter(Boolean)));
-            return months.length > 0 ? months.join(' - ') : '';
-          })()}
+        {/* Parsi months for this Gregorian month with MAH beside */}
+        <div style={{ textAlign: 'center', fontWeight: 600, fontSize: '15px', color: 'var(--text-secondary)', marginTop: '2px', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+          <span style={{ fontWeight: 'bold', color: '#000', fontSize: '16px' }}>MAH</span>
+          <span>
+            {(() => {
+              // Get unique Parsi months in this Gregorian month
+              const months = Array.from(new Set(shenshaiDays.map(d => d.month).filter(Boolean)));
+              return months.length > 0 ? months.join(' - ') : '';
+            })()}
+          </span>
         </div>
       </div>
 
@@ -444,8 +442,8 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
         <div className="mobile-menu-overlay" onClick={() => setMenuOpen(false)}>
           <div className="mobile-menu" onClick={e => e.stopPropagation()}>
             <div className="mobile-menu-header">
-            <Image src="/logo.jpeg" alt="Innovative Hormaz Technologies Logo" width={32} height={32} style={{ borderRadius: '6px', objectFit: 'cover', marginRight: '8px' }} />
-              <h3 style={{ fontSize: '18px', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>Innovative Hormaz Technologies</h3>
+            <Image src="/logo.png" alt="Hormaz Innovates Logo" width={32} height={32} style={{ borderRadius: '6px', objectFit: 'cover', marginRight: '8px' }} />
+              <h3 style={{ fontSize: '18px', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>Hormaz Innovates</h3>
               <button onClick={() => setMenuOpen(false)}>×</button>
             </div>
 

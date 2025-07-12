@@ -71,6 +71,11 @@ const FeedbackForm: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 py-12 px-4">
       <div className="max-w-4xl mx-auto">
+        {/* Brand Logo and Name */}
+        <div className="text-center mb-4">
+          <img src="/logo.png" alt="Hormaz Innovates Logo" style={{ display: 'inline-block', width: 48, height: 48, borderRadius: 8, objectFit: 'cover', marginBottom: 8 }} />
+          <div style={{ fontWeight: 700, fontSize: 20, color: '#222', marginBottom: 8 }}>Hormaz Innovates</div>
+        </div>
         {/* Header */}
         <div className="text-center mb-12">
           <div className="bg-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-lg">

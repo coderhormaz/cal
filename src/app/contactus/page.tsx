@@ -61,6 +61,11 @@ const ContactForm = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12 px-4">
       <div className="max-w-2xl mx-auto">
+        {/* Brand Logo and Name */}
+        <div className="text-center mb-4">
+          <img src="/logo.png" alt="Hormaz Innovates Logo" style={{ display: 'inline-block', width: 48, height: 48, borderRadius: 8, objectFit: 'cover', marginBottom: 8 }} />
+          <div style={{ fontWeight: 700, fontSize: 20, color: '#222', marginBottom: 8 }}>Hormaz Innovates</div>
+        </div>
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">

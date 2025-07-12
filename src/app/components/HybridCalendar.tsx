@@ -507,7 +507,7 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
               )}
               
               <div className="d-flex align-items-center gap-3">
-                <Image src="/logo.jpeg" alt="Innovative Hormaz Technologies Logo" width={32} height={32} style={{ borderRadius: '6px', objectFit: 'cover' }} />
+                <Image src="/logo.png" alt="Hormaz Innovates Logo" width={32} height={32} style={{ borderRadius: '6px', objectFit: 'cover' }} />
                 <h1 style={{ 
                   fontSize: isMobile ? '18px' : '22px', 
                   fontWeight: 700, 
@@ -515,7 +515,7 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                   margin: 0,
                   whiteSpace: 'nowrap'
                 }}>
-                  Innovative Hormaz Technologies
+                  Hormaz Innovates
                 </h1>
               </div>
             </div>
