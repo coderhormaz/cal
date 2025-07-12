@@ -413,7 +413,7 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
             </svg>
           </button>
           
-          <h1>{currentDate.toLocaleString('default', { month: 'short', year: 'numeric' }).toUpperCase()}</h1>
+          <h1>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' }).toUpperCase()}</h1>
           
           <button 
             className="nav-btn"
