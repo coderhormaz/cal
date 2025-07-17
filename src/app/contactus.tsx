@@ -26,9 +26,7 @@ const ContactForm = () => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Contact Us
-          </h1>
+          
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon as possible.
           </p>

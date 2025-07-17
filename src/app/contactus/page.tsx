@@ -62,34 +62,24 @@ const ContactForm = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12 px-4">
       <div className="max-w-2xl mx-auto">
         {/* Brand Logo and Name */}
-        <div className="text-center mb-4">
-          <img src="/logo.png" alt="Hormaz Innovates Logo" style={{ display: 'inline-block', width: 48, height: 48, borderRadius: 8, objectFit: 'cover', marginBottom: 8 }} />
-          <div style={{ fontWeight: 700, fontSize: 20, color: '#222', marginBottom: 8 }}>Hormaz Innovates</div>
+        <div className="text-center mb-1">
+          <img src="/logo.png" alt="Hormaz Innovates Logo" style={{ display: 'inline-block', width: 250, height: 250, borderRadius: 0, objectFit: 'cover', marginBottom: 0 }} />
+
         </div>
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Contact Us
+           
           </h1>
           <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
             We&apos;d love to hear from you. Fill out the form and we&apos;ll get back to you soon.
           </p>
         </div>
         <div className="grid gap-8">
-          {/* Additional Info */}
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-200 text-center">
-            <h3 className="text-lg font-semibold text-blue-800 mb-3">
-              Quick Response
-            </h3>
-            <p className="text-blue-700 text-sm leading-relaxed">
-              We typically respond to all inquiries within 24 hours during business days. 
-                
-            </p>
-          </div>
           {/* Contact Form */}
           <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
             <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-6">
-              Send us a Message
+              Reach Out 
             </h2>
 
             {submitStatus === 'success' && (
