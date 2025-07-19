@@ -616,15 +616,7 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
                     </div>
                   )}
                   
-                  {/* Special indicator for first day */}
-                  {isFirstDay && (
-                    <div className="special-indicator">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                        <path d="M8 12l2 2 4-4" stroke="currentColor" strokeWidth="2"/>
-                      </svg>
-                    </div>
-                  )}
+                  {/* Special indicator for first day removed as requested */}
                 </div>
               </div>
             );
