@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 export interface EventData {
   id?: string;
   title: string;
-  event_type: 'none' | 'birthday' | 'wedding' | 'navjote';
+  event_type: 'none' | 'birthday' | 'wedding' | 'navjote' | 'death';
   calendar_type: 'gregorian' | 'parsi';
   gregorian_month?: number;
   gregorian_day?: number;
@@ -162,6 +162,7 @@ export default function EventModal({
                 <option value="birthday">Birthday</option>
                 <option value="wedding">Wedding</option>
                 <option value="navjote">Navjote</option>
+                <option value="death">Death</option>
               </select>
             </div>
 

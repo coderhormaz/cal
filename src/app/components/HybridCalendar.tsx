@@ -6,7 +6,7 @@ import { supabase } from '../../lib/supabase';
 import EventModal, { EventData } from './EventModal';
 import DayEventsModal from './DayEventsModal';
 
-// Utility: Generate a color from a string (event title)
+// Utility: Color by event type, fallback to stringToColor for custom events
 function stringToColor(str: string) {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -14,6 +14,21 @@ function stringToColor(str: string) {
   }
   const h = hash % 360;
   return `hsl(${h}, 65%, 55%)`;
+}
+function getEventColor(event: EventData) {
+  switch (event.event_type) {
+    case 'birthday':
+      return '#a259e6'; // purple
+    case 'wedding':
+      return '#34c759'; // green
+    case 'navjote':
+      return '#007aff'; // blue
+    case 'death':
+      return '#ff3b30'; // red for death anniversary
+    case 'none':
+    default:
+      return stringToColor(event.title);
+  }
 }
 
 // Popover component for event details
@@ -437,7 +452,7 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
                     <div style={{ 
                       width: '4px',
                       height: '40px',
-                      backgroundColor: stringToColor(ev.title),
+                      backgroundColor: getEventColor(ev),
                       borderRadius: '2px',
                       flexShrink: 0
                     }}></div>

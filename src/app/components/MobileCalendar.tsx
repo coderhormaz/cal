@@ -105,6 +105,8 @@ function getEventColor(eventType: string) {
       return '#34c759'; // green
     case 'navjote':
       return '#007aff'; // blue
+    case 'death':
+      return '#ff3b30'; // red for death anniversary
     case 'none':
     default:
       return '#ff9500'; // orange
@@ -565,7 +567,7 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
               <div
                 key={i}
                 className={`calendar-day ${isCurrentDay ? 'today' : ''} ${isFirstDay ? 'first-day' : ''} ${isSunday ? 'sunday' : ''}`}
-                onClick={() => handleDayClick(dateObj.toISOString().slice(0, 10))}
+                onClick={() => handleDayClick(`${year}-${String(month + 1).padStart(2, '0')}-${String(i + 1).padStart(2, '0')}`)}
               >
                 <div className="day-content">
                   <div className="day-number">{i + 1}</div>
