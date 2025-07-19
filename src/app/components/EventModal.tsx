@@ -15,7 +15,10 @@ export interface EventData {
 
 const parsiMonths = [
   "Fravardin", "Ardibehesht", "Khordad", "Tir", "Amardad", "Shehrevar",
-  "Meher", "Avan", "Adar", "Dae", "Bahman", "Aspandarmad"
+  "Meher", "Avan", "Adar", "Dae", "Bahman", "Aspandarmad", "Gatha"
+];
+const gathaDays = [
+  "Ahunavaiti", "Ushtavaiti", "Spentamainyu", "Vohuxshathra", "Vahishtoishti"
 ];
 const parsiRoj = [
   "Hormazd", "Bahman", "Ardibehesht", "Shehrevar", "Aspandard",
@@ -162,7 +165,7 @@ export default function EventModal({
                 <option value="birthday">Birthday</option>
                 <option value="wedding">Wedding</option>
                 <option value="navjote">Navjote</option>
-                <option value="death">Death</option>
+                <option value="death">Baj</option>
               </select>
             </div>
 
@@ -250,9 +253,17 @@ export default function EventModal({
                   {form.calendar_type === 'parsi' && (
                     <>
                       <label style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '2px' }}>Mah</label>
-                      <select 
-                        value={form.parsi_month} 
-                        onChange={e => setForm(f => ({ ...f, parsi_month: Number(e.target.value) }))} 
+                      <select
+                        value={form.parsi_month}
+                        onChange={e => {
+                          const val = Number(e.target.value);
+                          setForm(f => ({
+                            ...f,
+                            parsi_month: val,
+                            // If Gatha is selected, default roj to 1 (first Gatha day)
+                            parsi_roj: val === 12 ? 1 : (typeof f.parsi_roj === 'number' ? (f.parsi_roj > 30 ? 1 : f.parsi_roj) : 1)
+                          }));
+                        }}
                         className="form-control"
                         style={{ marginBottom: form.recurrence === 'monthly' ? 0 : '4px' }}
                       >
@@ -260,13 +271,15 @@ export default function EventModal({
                       </select>
                       {form.recurrence !== 'monthly' && (
                         <>
-                          <label style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '2px', marginTop: '2px' }}>Roj</label>
-                          <select 
-                            value={form.parsi_roj} 
-                            onChange={e => setForm(f => ({ ...f, parsi_roj: Number(e.target.value) }))} 
+                          <label style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '2px', marginTop: '2px' }}>{form.parsi_month === 12 ? 'Gatha Day' : 'Roj'}</label>
+                          <select
+                            value={form.parsi_roj}
+                            onChange={e => setForm(f => ({ ...f, parsi_roj: Number(e.target.value) }))}
                             className="form-control"
                           >
-                            {parsiRoj.map((r, idx) => <option key={idx + 1} value={idx + 1}>{r}</option>)}
+                            {form.parsi_month === 12
+                              ? gathaDays.map((g, idx) => <option key={idx + 1} value={idx + 1}>{g}</option>)
+                              : parsiRoj.map((r, idx) => <option key={idx + 1} value={idx + 1}>{r}</option>)}
                           </select>
                         </>
                       )}
@@ -298,6 +311,7 @@ export default function EventModal({
                 />
                 Enable reminder
               </label>
+              <button style={{ position: 'absolute', justifyContent:'left' }}> Year</button>
             </div>
 
             <div className="d-flex justify-content-between gap-3" style={{ flexWrap: 'wrap' }}>

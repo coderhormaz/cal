@@ -427,15 +427,32 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
           </button>
         </div>
         {/* Parsi months for this Gregorian month with MAH beside */}
-        <div style={{ textAlign: 'center', fontWeight: 600, fontSize: '15px', color: 'var(--text-secondary)', marginTop: '2px', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-          <span style={{ fontWeight: 'bold', color: '#000', fontSize: '16px' }}>MAH</span>
-          <span>
-            {(() => {
-              // Get unique Parsi months in this Gregorian month
-              const months = Array.from(new Set(shenshaiDays.map(d => d.month).filter(Boolean)));
-              return months.length > 0 ? months.join(' - ') : '';
-            })()}
-          </span>
+        <div style={{ textAlign: 'center', fontWeight: 600, fontSize: '15px', color: 'var(--text-secondary)', marginTop: '2px', letterSpacing: '0.5px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+          <div>
+            <span style={{ fontWeight: 'bold', color: '#000', fontSize: '16px' }}>Saal</span>
+            <span style={{ marginLeft: '6px' }}>
+              {(() => {
+                // Calculate Parsi year (saal) for the current Gregorian date
+                // Use Navroze as the start of the Parsi year
+                const navroze = ZCalendar.Shenshai.getPrecedingNavrozeDate(currentDate);
+                let gregorianYear = currentDate.getFullYear();
+                if (currentDate < navroze) gregorianYear--;
+                // Parsi year = Gregorian year - 631 (Y.Z.Y. calendar)
+                const parsiYear = gregorianYear - 631;
+                return parsiYear > 0 ? parsiYear + '' : '';
+              })()}
+            </span>
+          </div>
+          <div>
+            <span style={{ fontWeight: 'bold', color: '#000', fontSize: '16px' }}>Mah</span>
+            <span style={{ marginLeft: '6px' }}>
+              {(() => {
+                // Get unique Parsi months in this Gregorian month
+                const months = Array.from(new Set(shenshaiDays.map(d => d.month).filter(Boolean)));
+                return months.length > 0 ? months.join(' - ') : '';
+              })()}
+            </span>
+          </div>
         </div>
       </div>
 
