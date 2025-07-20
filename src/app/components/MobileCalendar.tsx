@@ -96,7 +96,7 @@ function SearchModal({
   );
 }
 
-// Utility: Generate a color from a string (event title)
+// Event color mapping function
 function getEventColor(eventType: string) {
   switch (eventType) {
     case 'birthday':
@@ -106,7 +106,7 @@ function getEventColor(eventType: string) {
     case 'navjote':
       return '#007aff'; // blue
     case 'death':
-      return '#ff3b30'; // red for death anniversary
+      return '#ff3b30'; // red 
     case 'none':
     default:
       return '#ff9500'; // orange
@@ -435,7 +435,7 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
                 // Calculate Parsi year (saal) for the current Gregorian date
                 // Use Navroze as the start of the Parsi year
                 const navroze = ZCalendar.Shenshai.getPrecedingNavrozeDate(currentDate);
-                let navrozeYear = navroze.getFullYear();
+                const navrozeYear = navroze.getFullYear();
                 let parsiYear = navrozeYear - 631;
                 // If today is before Navroze, subtract 1 from parsiYear
                 if (currentDate < navroze) {
