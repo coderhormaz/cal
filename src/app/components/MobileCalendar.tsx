@@ -100,7 +100,7 @@ function SearchModal({
 function getEventColor(eventType: string) {
   switch (eventType) {
     case 'birthday':
-      return '#a259e6'; // purple
+      return '#ff9500'; // orange
     case 'wedding':
       return '#34c759'; // green
     case 'navjote':
@@ -109,7 +109,7 @@ function getEventColor(eventType: string) {
       return '#ff3b30'; // red 
     case 'none':
     default:
-      return '#ff9500'; // orange
+      return '#a259e6'; // purple
   }
 }
 
