@@ -415,7 +415,7 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
             </svg>
           </button>
           
-          <h1>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' }).toUpperCase()}</h1>
+          <h1>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h1>
           
           <button 
             className="nav-btn"
@@ -435,10 +435,14 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
                 // Calculate Parsi year (saal) for the current Gregorian date
                 // Use Navroze as the start of the Parsi year
                 const navroze = ZCalendar.Shenshai.getPrecedingNavrozeDate(currentDate);
-                let gregorianYear = currentDate.getFullYear();
-                if (currentDate < navroze) gregorianYear--;
-                // Parsi year = Gregorian year - 631 (Y.Z.Y. calendar)
-                const parsiYear = gregorianYear - 631;
+                let navrozeYear = navroze.getFullYear();
+                let parsiYear = navrozeYear - 631;
+                // If today is before Navroze, subtract 1 from parsiYear
+                if (currentDate < navroze) {
+                  parsiYear -= 1;
+                }
+                // Always add 1 to match the expected Parsi year
+                parsiYear += 1;
                 return parsiYear > 0 ? parsiYear + '' : '';
               })()}
             </span>

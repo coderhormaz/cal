@@ -11,6 +11,9 @@ export interface EventData {
   parsi_roj?: number;
   recurrence: '' | 'monthly' | 'yearly';
   reminder: boolean;
+  birth_year?: number;
+  birth_month?: number;
+  birth_day?: number;
 }
 
 const parsiMonths = [
@@ -54,7 +57,8 @@ export default function EventModal({
     parsi_roj: initialData?.parsi_roj ?? 1,
     recurrence: initialData?.recurrence || '',
     reminder: initialData?.reminder ?? false,
-    id: initialData?.id
+    id: initialData?.id,
+    // removed advanced birth date fields
   });
 
   // Reset form when modal opens/closes or initialData changes
@@ -70,7 +74,8 @@ export default function EventModal({
         parsi_roj: initialData?.parsi_roj ?? 1,
         recurrence: initialData?.recurrence || '',
         reminder: initialData?.reminder ?? false,
-        id: initialData?.id
+        id: initialData?.id,
+        // removed advanced birth date fields
       });
     }
   }, [open, initialData]);
@@ -78,6 +83,8 @@ export default function EventModal({
   const handleRecurrenceChange = (val: string) => {
     setForm(f => ({ ...f, recurrence: val as EventData['recurrence'] }));
   };
+
+  // Remove advanced birth date fields from form state if present
 
   const handleClose = () => {
     // Clear form when closing
@@ -289,6 +296,7 @@ export default function EventModal({
               </div>
             )}
 
+
             <div className="mb-4">
               <label style={{ 
                 display: 'flex',
@@ -311,7 +319,6 @@ export default function EventModal({
                 />
                 Enable reminder
               </label>
-              <button style={{ position: 'absolute', justifyContent:'left' }}> Year</button>
             </div>
 
             <div className="d-flex justify-content-between gap-3" style={{ flexWrap: 'wrap' }}>
