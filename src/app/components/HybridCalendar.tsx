@@ -205,7 +205,14 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
         .from('events')
         .select('*')
         .eq('user_id', user.id);
-      if (!error && data) setEvents(data);
+      if (!error && data) {
+        // Normalize gatha_index: convert null to undefined
+        const normalized = data.map(ev => ({
+          ...ev,
+          gatha_index: typeof ev.gatha_index === 'number' ? ev.gatha_index : undefined
+        }));
+        setEvents(normalized);
+      }
     };
     fetchEvents();
   }, [user.id, modalOpen]);
@@ -233,7 +240,10 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
     const dayEvents = events.filter(ev => {
       const day = date.getDate();
       const month = date.getMonth();
-      
+      const dayIndex = day - 1;
+      const shenshaiDays = ZCalendar.Shenshai.getRojNamesForMonth(new Date(date.getFullYear(), date.getMonth(), 1));
+      const shenshai = shenshaiDays[dayIndex];
+
       if (ev.calendar_type === 'gregorian') {
         if (ev.recurrence === 'yearly') {
           return ev.gregorian_month === month && ev.gregorian_day === day;
@@ -243,10 +253,11 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
           return ev.gregorian_month === month && ev.gregorian_day === day;
         }
       } else if (ev.calendar_type === 'parsi') {
-        const dayIndex = date.getDate() - 1;
-        const shenshaiDays = ZCalendar.Shenshai.getRojNamesForMonth(new Date(date.getFullYear(), date.getMonth(), 1));
-        const shenshai = shenshaiDays[dayIndex];
-        if (!shenshai) return false;
+        // Gatha day
+        if (shenshai && shenshai.month === '' && typeof ev.gatha_index === 'number') {
+          return ZCalendar.Shenshai.GATHAS[ev.gatha_index] === shenshai.day;
+        }
+        // Normal Parsi day
         const parsiMonthIdx = ZCalendar.Shenshai.MAH.indexOf(shenshai.month);
         const parsiRojIdx = ZCalendar.Shenshai.ROJ.indexOf(shenshai.day);
         if (parsiMonthIdx === -1 || parsiRojIdx === -1) return false;
@@ -266,17 +277,38 @@ export default function HybridCalendar({ user }: HybridCalendarProps) {
 
   // Save event handler
   const handleSaveEvent = async (data: EventData) => {
-    let event = {
-      ...data,
-      user_id: user.id,
-      email: user.email,
-      parsi_month: data.calendar_type === 'parsi' ? (data.parsi_month ?? null) : null,
-      parsi_roj: data.calendar_type === 'parsi' ? (data.parsi_roj ?? null) : null,
-      gregorian_month: data.calendar_type === 'gregorian' ? (data.gregorian_month ?? null) : null,
-      gregorian_day: data.calendar_type === 'gregorian' ? (data.gregorian_day ?? null) : null,
-      recurrence: !data.recurrence ? 'none' : data.recurrence,
-      reminder: !!data.reminder
-    };
+    let gathaIndex = data.gatha_index;
+    let event;
+    if (data.calendar_type === 'parsi' && data.parsi_month === 12 && typeof data.parsi_roj === 'number') {
+      // Gatha event: set gatha_index, nullify parsi_month and parsi_roj
+      gathaIndex = data.parsi_roj - 1;
+      event = {
+        ...data,
+        user_id: user.id,
+        email: user.email,
+        parsi_month: null,
+        parsi_roj: null,
+        gatha_index: gathaIndex,
+        gregorian_month: null,
+        gregorian_day: null,
+        recurrence: !data.recurrence ? 'none' : data.recurrence,
+        reminder: !!data.reminder
+      };
+    } else {
+      // Non-Gatha event
+      event = {
+        ...data,
+        user_id: user.id,
+        email: user.email,
+        parsi_month: data.calendar_type === 'parsi' ? (data.parsi_month ?? null) : null,
+        parsi_roj: data.calendar_type === 'parsi' ? (data.parsi_roj ?? null) : null,
+        gatha_index: undefined,
+        gregorian_month: data.calendar_type === 'gregorian' ? (data.gregorian_month ?? null) : null,
+        gregorian_day: data.calendar_type === 'gregorian' ? (data.gregorian_day ?? null) : null,
+        recurrence: !data.recurrence ? 'none' : data.recurrence,
+        reminder: !!data.reminder
+      };
+    }
     
     if (typeof event.id === 'undefined') {
       event = Object.fromEntries(Object.entries(event).filter(([k]) => k !== 'id')) as typeof event;

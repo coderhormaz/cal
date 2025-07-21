@@ -9,6 +9,7 @@ export interface EventData {
   gregorian_day?: number;
   parsi_month?: number;
   parsi_roj?: number;
+  gatha_index?: number;
   recurrence: '' | 'monthly' | 'yearly';
   reminder: boolean;
   birth_year?: number;
