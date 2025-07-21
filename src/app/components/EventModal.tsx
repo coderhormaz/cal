@@ -275,7 +275,8 @@ export default function EventModal({
                         className="form-control"
                         style={{ marginBottom: form.recurrence === 'monthly' ? 0 : '4px' }}
                       >
-                        {parsiMonths.map((m, i) => <option key={i} value={i}>{m}</option>)}
+                        {/* Only show Gatha in yearly recurrence */}
+                        {parsiMonths.map((m, i) => (form.recurrence === 'monthly' && i === 12 ? null : <option key={i} value={i}>{m}</option>))}
                       </select>
                       {form.recurrence !== 'monthly' && (
                         <>

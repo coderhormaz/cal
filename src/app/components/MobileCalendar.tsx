@@ -88,7 +88,7 @@ function SearchModal({
                   }}
                 >
                   <div style={{ fontWeight: '600', marginBottom: '4px' }}>
-                    {event.title}{event.event_type && event.event_type !== 'none' ? ` ${event.event_type.charAt(0).toUpperCase() + event.event_type.slice(1)}` : ''}
+                    {event.title}{event.event_type && event.event_type !== 'none' ? ` ${event.event_type === 'death' ? 'Baj' : event.event_type.charAt(0).toUpperCase() + event.event_type.slice(1)}` : ''}
                   </div>
 
                 </div>
@@ -691,7 +691,7 @@ export default function MobileCalendar({ user }: MobileCalendarProps) {
                             setModalOpen(true);
                           }}
                         >
-                          {ev.title}{ev.event_type && ev.event_type !== 'none' ? ` ${ev.event_type.charAt(0).toUpperCase() + ev.event_type.slice(1)}` : ''}
+                          {ev.title}{ev.event_type && ev.event_type !== 'none' ? ` ${ev.event_type === 'death' ? 'Baj' : ev.event_type.charAt(0).toUpperCase() + ev.event_type.slice(1)}` : ''}
                         </div>
                       ))}
                       {dayEvents.length > 1 && (
