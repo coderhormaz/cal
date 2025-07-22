@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { AlignCenter, Moon, Sun } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 
 export default function CookiesPolicy() {
   const [darkMode, setDarkMode] = useState(false);
