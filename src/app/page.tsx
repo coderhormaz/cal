@@ -1,10 +1,11 @@
+// ...existing code...
 "use client";
 
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronRight, Calendar, Users, Globe, Settings, Moon, Sun, ArrowRight } from 'lucide-react';
+import { Moon, Sun, ArrowRight } from 'lucide-react';
 import HybridCalendar from "./components/HybridCalendar";
 import MobileCalendar from "./components/MobileCalendar";
 import Auth from "./components/Auth";
@@ -106,7 +107,7 @@ export default function Home() {
               <h1>Calendar Parsi</h1>
             </div>
             <div className="header-actions">
-              <Link href="/subscription" className="btn btn-outline">Subscription</Link>
+             
               <button 
                 className="theme-toggle" 
                 onClick={toggleDarkMode}
@@ -234,7 +235,7 @@ export default function Home() {
           <div className="footer-divider"></div>
           
           <div className="footer-bottom">
-            <p className="footer-copyright">&copy; {new Date().getFullYear()} Calendar Parsi. All rights reserved.</p>
+            <p className="footer-copyright">&copy; {new Date().getFullYear()} Hormaz Innovates All right reserved</p>
             <div className="footer-bottom-links">
               <Link href="/terms-of-service">Terms of Service</Link>
               <Link href="/privacy-policy">Privacy Policy</Link>

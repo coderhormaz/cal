@@ -1,19 +1,51 @@
 "use client";
 
-import { useEffect } from 'react';
-import { Check, Calendar, Search, Palette, Edit3, Smartphone, Star } from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useState, useEffect } from 'react';
+import { Moon, Sun, Check, Calendar, Search, Palette, Edit3, Smartphone, Star } from 'lucide-react';
 
 export default function Subscription() {
+  const [darkMode, setDarkMode] = useState(false);
 
   // Check for dark mode preference
   useEffect(() => {
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setDarkMode(isDark);
     document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
   }, []);
 
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    document.documentElement.setAttribute('data-theme', newMode ? 'dark' : 'light');
+  };
 
   return (
     <div className="subscription-page" style={{ background: 'var(--background)' }}>
+      {/* Header */}
+      <header className="landing-header">
+        <div className="container">
+          <div className="header-content">
+            <Link href="/" className="logo">
+              <Image src="/logo.png" alt="Calendar Parsi Logo" width={40} height={40} />
+              <h1>Calendar Parsi</h1>
+            </Link>
+            <div className="header-actions">
+              <button 
+                className="theme-toggle" 
+                onClick={toggleDarkMode}
+                aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+              >
+                {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+              </button>
+              <Link href="/" className="btn btn-primary">Back to Home</Link>
+            </div>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <section className="subscription-hero">
         <div className="container">
@@ -121,6 +153,16 @@ export default function Subscription() {
                 <p>Transparent pricing with no surprise charges or in-app purchases.</p>
               </div>
             </div>
+
+            <div className="benefit-item">
+              <div className="check-icon">
+                <Check size={20} color="white" />
+              </div>
+              <div className="benefit-content">
+                <h3>Priority Support</h3>
+                <p>Get faster responses and dedicated assistance for any questions or issues.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -154,6 +196,32 @@ export default function Subscription() {
           </div>
         </div>
       </section>
+
+      {/* CTA Section */}
+      <section className="cta-section">
+        <div className="container">
+          <div className="cta-content">
+            <h2>Ready to Upgrade Your Calendar Experience?</h2>
+            <p>Join thousands of satisfied users who have enhanced their productivity with Calendar Parsi Premium.</p>
+            <button className="btn btn-lg btn-primary">Get Lifetime Access Now</button>
+            <p className="cta-note">Only ₹500 • One-time payment • Lifetime access</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="landing-footer">
+        <div className="container">
+          <div className="footer-bottom">
+            <p className="footer-copyright">&copy; {new Date().getFullYear()} Hormaz Innovates All right reserved</p>
+            <div className="footer-bottom-links">
+              <Link href="/terms-of-service">Terms of Service</Link>
+              <Link href="/privacy-policy">Privacy Policy</Link>
+              <Link href="/cookies-policy">Cookies</Link>
+            </div>
+          </div>
+        </div>
+      </footer>
 
       <style jsx>{`
         .subscription-page {
@@ -225,17 +293,15 @@ export default function Subscription() {
           color: white;
         }
         
+        .hero-content {
+          max-width: 600px;
+          margin: 0 auto;
+        }
+        
         .hero-content h1 {
           font-size: 48px;
           font-weight: 700;
           margin-bottom: 16px;
-          color: var(--text-primary);
-        }
-        .hero-subtitle {
-          font-size: 20px;
-          margin-bottom: 32px;
-          opacity: 0.9;
-          color: var(--text-primary);
         }
         
         .hero-subtitle {
@@ -259,10 +325,10 @@ export default function Subscription() {
           background: transparent;
           border-radius: 12px;
           padding: 8px 24px;
-          color: var(--text-primary);
+          color: #fff;
         }
         .currency, .amount, .period {
-          color: var(--text-primary);
+          color: #fff;
         }
         .currency {
           font-size: 32px;

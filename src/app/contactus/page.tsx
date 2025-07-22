@@ -1,4 +1,5 @@
 "use client";
+import Image from 'next/image';
 import React, { useState } from 'react';
 import { Send, CheckCircle, AlertCircle } from 'lucide-react';
 
@@ -63,7 +64,7 @@ const ContactForm = () => {
       <div className="max-w-2xl mx-auto">
         {/* Brand Logo and Name */}
         <div className="text-center mb-1">
-          <img src="/logo.png" alt="Hormaz Innovates Logo" style={{ display: 'inline-block', width: 250, height: 250, borderRadius: 0, objectFit: 'cover', marginBottom: 0 }} />
+          <Image src="/logo.png" alt="Hormaz Innovates Logo" width={250} height={250} style={{ display: 'inline-block', borderRadius: 0, objectFit: 'cover', marginBottom: 0 }} />
 
         </div>
         {/* Header */}

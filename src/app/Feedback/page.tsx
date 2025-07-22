@@ -1,4 +1,5 @@
 "use client";
+import Image from 'next/image';
 import React, { useState } from 'react';
 import { MessageSquare, Star, ThumbsUp, Send, CheckCircle, AlertCircle, User, Mail } from 'lucide-react';
 
@@ -73,7 +74,7 @@ const FeedbackForm: React.FC = () => {
       <div className="max-w-4xl mx-auto">
         {/* Brand Logo and Name */}
         <div className="text-center mb-4">
-          <img src="/logo.png" alt="Hormaz Innovates Logo" style={{ display: 'inline-block', width: 48, height: 48, borderRadius: 8, objectFit: 'cover', marginBottom: 8 }} />
+          <Image src="/logo.png" alt="Hormaz Innovates Logo" width={48} height={48} style={{ display: 'inline-block', borderRadius: 8, objectFit: 'cover', marginBottom: 8 }} />
           <div style={{ fontWeight: 700, fontSize: 20, color: '#222', marginBottom: 8 }}>Hormaz Innovates</div>
         </div>
         {/* Header */}

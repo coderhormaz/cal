@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { Moon, Sun } from 'lucide-react';
+import { AlignCenter, Moon, Sun } from 'lucide-react';
 
 export default function CookiesPolicy() {
   const [darkMode, setDarkMode] = useState(false);
@@ -45,31 +45,33 @@ export default function CookiesPolicy() {
           </div>
         </div>
       </header>
-
+            <br /><p style={{ textAlign: "center"}}>
+              Cookies set by the website owner (in this case, Calendar Parsi) are called &quot;first-party cookies&quot;. Cookies set by parties other than the website owner are called &quot;third-party cookies&quot;. Third-party cookies enable third-party features or functionality to be provided on or through the website (e.g., advertising, interactive content, and analytics).
+            </p>
       {/* Content */}
       <main className="legal-content">
         <div className="container">
           <h1>Cookies Policy</h1>
-          <p className="last-updated">Last Updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+            <p>We use first-party and third-party cookies for several reasons. Some cookies are required for technical reasons in order for our website and application to operate, and we refer to these as &quot;essential&quot; or &quot;strictly necessary&quot; cookies. Other cookies also enable us to track and target the interests of our users to enhance the experience on our website. Third parties may serve cookies through our website for advertising, analytics, and other purposes.</p>
           
           <section className="policy-section">
             <h2>1. Introduction</h2>
-            <p>This Cookies Policy explains how Calendar Parsi ("we", "us", or "our") uses cookies and similar technologies to recognize you when you visit our website and application. It explains what these technologies are and why we use them, as well as your rights to control our use of them.</p>
+            <p>This Cookies Policy explains how Calendar Parsi (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) uses cookies and similar technologies to recognize you when you visit our website and application. It explains what these technologies are and why we use them, as well as your rights to control our use of them.</p>
           </section>
 
           <section className="policy-section">
             <h2>2. What Are Cookies?</h2>
             <p>Cookies are small data files that are placed on your computer or mobile device when you visit a website. Cookies are widely used by website owners to make their websites work, or to work more efficiently, as well as to provide reporting information.</p>
-            <p>Cookies set by the website owner (in this case, Calendar Parsi) are called "first-party cookies". Cookies set by parties other than the website owner are called "third-party cookies". Third-party cookies enable third-party features or functionality to be provided on or through the website (e.g., advertising, interactive content, and analytics).</p>
+            <p>Cookies set by the website owner (in this case, Calendar Parsi) are called &quot;first-party cookies&quot;. Cookies set by parties other than the website owner are called &quot;third-party cookies&quot;. Third-party cookies enable third-party features or functionality to be provided on or through the website (e.g., advertising, interactive content, and analytics).</p>
           </section>
 
           <section className="policy-section">
             <h2>3. Why Do We Use Cookies?</h2>
-            <p>We use first-party and third-party cookies for several reasons. Some cookies are required for technical reasons in order for our website and application to operate, and we refer to these as "essential" or "strictly necessary" cookies. Other cookies also enable us to track and target the interests of our users to enhance the experience on our website. Third parties may serve cookies through our website for advertising, analytics, and other purposes.</p>
+            <p>We use first-party and third-party cookies for several reasons. Some cookies are required for technical reasons in order for our website and application to operate, and we refer to these as &quot;essential&quot; or &quot;strictly necessary&quot; cookies. Other cookies also enable us to track and target the interests of our users to enhance the experience on our website. Third parties may serve cookies through our website for advertising, analytics, and other purposes.</p>
             <p>The specific types of first and third-party cookies served through our website and the purposes they perform are described below:</p>
             
             <h3>Essential Cookies</h3>
-            <p>These cookies are strictly necessary to provide you with services available through our website and to use some of its features, such as access to secure areas. Because these cookies are strictly necessary to deliver the website, you cannot refuse them without impacting how our website functions.</p>
+            <p>You can also set or amend your web browser controls to accept or refuse cookies. If you choose to reject cookies, you may still use our website though your access to some functionality and areas of our website may be restricted. As the means by which you can refuse cookies through your web browser controls vary from browser to browser, you should visit your browser&apos;s help menu for more information.</p>
             
             <h3>Performance and Functionality Cookies</h3>
             <p>These cookies are used to enhance the performance and functionality of our website but are non-essential to their use. However, without these cookies, certain functionality may become unavailable.</p>
@@ -84,8 +86,7 @@ export default function CookiesPolicy() {
           <section className="policy-section">
             <h2>4. How Can You Control Cookies?</h2>
             <p>You have the right to decide whether to accept or reject cookies. You can exercise your cookie preferences by following the instructions provided in our cookie banner when you first visit our website.</p>
-            <p>You can also set or amend your web browser controls to accept or refuse cookies. If you choose to reject cookies, you may still use our website though your access to some functionality and areas of our website may be restricted. As the means by which you can refuse cookies through your web browser controls vary from browser to browser, you should visit your browser's help menu for more information.</p>
-            <p>In addition, most advertising networks offer you a way to opt out of targeted advertising. If you would like to find out more information, please visit <a href="http://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">http://www.aboutads.info/choices/</a> or <a href="http://www.youronlinechoices.com" target="_blank" rel="noopener noreferrer">http://www.youronlinechoices.com</a>.</p>
+            <p>You can also set or amend your web browser controls to accept or refuse cookies. If you choose to reject cookies, you may still use our website though your access to some functionality and areas of our website may be restricted. As the means by which you can refuse cookies through your web browser controls vary from browser to browser, you should visit your browser help menu for more information.</p>
           </section>
 
           <section className="policy-section">
@@ -109,7 +110,7 @@ export default function CookiesPolicy() {
               
               <div className="cookies-table-row">
                 <div className="cookies-table-cell">theme_preference</div>
-                <div className="cookies-table-cell">Stores user's dark/light mode preference</div>
+                <div className="cookies-table-cell">Stores user&#39;s dark/light mode preference</div>
                 <div className="cookies-table-cell">1 year</div>
                 <div className="cookies-table-cell">Functionality</div>
               </div>
@@ -151,7 +152,7 @@ export default function CookiesPolicy() {
       <footer className="landing-footer">
         <div className="container">
           <div className="footer-bottom">
-            <p className="footer-copyright">&copy; {new Date().getFullYear()} Calendar Parsi. All rights reserved.</p>
+            <p className="footer-copyright">&copy; {new Date().getFullYear()} Hormaz Innovates All right reserved</p>
             <div className="footer-bottom-links">
               <Link href="/terms-of-service">Terms of Service</Link>
               <Link href="/privacy-policy">Privacy Policy</Link>

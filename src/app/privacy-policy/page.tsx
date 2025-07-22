@@ -128,7 +128,7 @@ export default function PrivacyPolicy() {
 
           <section className="policy-section">
             <h2>9. Changes to This Privacy Policy</h2>
-            <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date.</p>
+            <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the &quot;Last Updated&quot; date.</p>
             <p>You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.</p>
           </section>
 
@@ -147,7 +147,7 @@ export default function PrivacyPolicy() {
       <footer className="landing-footer">
         <div className="container">
           <div className="footer-bottom">
-            <p className="footer-copyright">&copy; {new Date().getFullYear()} Calendar Parsi. All rights reserved.</p>
+            <p className="footer-copyright">&copy; {new Date().getFullYear()} Hormaz Innovates All right reserved</p>
             <div className="footer-bottom-links">
               <Link href="/terms-of-service">Terms of Service</Link>
               <Link href="/privacy-policy">Privacy Policy</Link>

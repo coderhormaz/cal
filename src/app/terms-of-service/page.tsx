@@ -149,7 +149,7 @@ export default function TermsOfService() {
 
           <section className="policy-section">
             <h2>10. Changes to Terms</h2>
-            <p>We reserve the right to modify these Terms at any time. We will provide notice of any significant changes by posting the new Terms on this page and updating the "Last Updated" date.</p>
+            <p>We reserve the right to modify these Terms at any time. We will provide notice of any significant changes by posting the new Terms on this page and updating the &quot;Last Updated&quot; date.</p>
             <p>Your continued use of the Service after any such changes constitutes your acceptance of the new Terms.</p>
           </section>
 
@@ -168,7 +168,7 @@ export default function TermsOfService() {
       <footer className="landing-footer">
         <div className="container">
           <div className="footer-bottom">
-            <p className="footer-copyright">&copy; {new Date().getFullYear()} Calendar Parsi. All rights reserved.</p>
+            <p className="footer-copyright">&copy; {new Date().getFullYear()} Hormaz Innovates All right reserved</p>
             <div className="footer-bottom-links">
               <Link href="/terms-of-service">Terms of Service</Link>
               <Link href="/privacy-policy">Privacy Policy</Link>
